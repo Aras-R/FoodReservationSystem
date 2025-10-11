@@ -1,27 +1,25 @@
-using FoodReservation.Application.Interfaces.Contexts;
+﻿using FoodReservation.Application.Interfaces.Contexts;
 using FoodReservation.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-// ??? Connection String ?? ???? ??????
-var connectionString = "@\"Data Source=DESKTOP-8ILS0U2; Initial Catalog=FoodReservationDB; Integrated Security=True; TrustServerCertificate=True;";
+// ثبت Connection String به صورت مستقیم
+var connectionString = @"Data Source=DESKTOP-8ILS0U2; Initial Catalog=FoodReservationDB; Integrated Security=True; TrustServerCertificate=True";
 
-// ??? DbContext ? Interface
+// ثبت DbContext و Interface
 builder.Services.AddDbContext<DatabaseContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-});
+        options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 
-// ????????? MVC
+// فعال‌سازی MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// ??????? Middleware ? Routing
+// تنظیمات Middleware و Routing
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
