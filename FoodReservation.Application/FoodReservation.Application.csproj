@@ -7,8 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\FacadePatterns\" />
-    <Folder Include="Services\" />
+    <Folder Include="Interfaces\FacadePatterns\DailyFoods\Commands\" />
+    <Folder Include="Interfaces\FacadePatterns\DailyFoods\FacadeDailyFoods\" />
+    <Folder Include="Interfaces\FacadePatterns\DailyFoods\Queries\" />
+    <Folder Include="Interfaces\FacadePatterns\Foods\Commands\" />
+    <Folder Include="Interfaces\FacadePatterns\Foods\FacadeFoods\" />
+    <Folder Include="Interfaces\FacadePatterns\Foods\Queries\" />
+    <Folder Include="Interfaces\FacadePatterns\Reservations\Commands\" />
+    <Folder Include="Interfaces\FacadePatterns\Reservations\FacadeReservations\" />
+    <Folder Include="Interfaces\FacadePatterns\Reservations\Queries\" />
+    <Folder Include="Interfaces\FacadePatterns\Users\Commands\" />
+    <Folder Include="Interfaces\FacadePatterns\Users\FacadeUsers\" />
+    <Folder Include="Interfaces\FacadePatterns\Users\Queries\" />
+    <Folder Include="Services\DailyFoods\Commands\" />
+    <Folder Include="Services\DailyFoods\FacadeDailyFoods\" />
+    <Folder Include="Services\DailyFoods\Queries\" />
+    <Folder Include="Services\Foods\Commands\" />
+    <Folder Include="Services\Foods\FacadeFoods\" />
+    <Folder Include="Services\Foods\Queries\" />
+    <Folder Include="Services\Reservations\Commands\" />
+    <Folder Include="Services\Reservations\FacadeReservations\" />
+    <Folder Include="Services\Reservations\Queries\" />
+    <Folder Include="Services\Users\Commands\" />
+    <Folder Include="Services\Users\FacadeUsers\" />
+    <Folder Include="Services\Users\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
