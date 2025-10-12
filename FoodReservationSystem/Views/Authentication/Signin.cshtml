@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "ورود به سامانه";
+}
+<link rel="stylesheet" href="~/css/Authentication.css" />
+
+<div class="auth-container">
+    <h2>ورود به سامانه رزرو غذا</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <p class="error">@ViewBag.Error</p>
+    }
+
+    <form method="post" action="/Authentication/SignIn">
+        <input type="text" name="studentNumber" placeholder="شماره دانشجویی" required />
+        <input type="password" name="password" placeholder="رمز عبور" required />
+        <button type="submit">ورود</button>
+    </form>
+
+    <p>هنوز حساب ندارید؟ <a href="/Authentication/SignUp">ثبت‌نام کنید</a></p>
+</div>

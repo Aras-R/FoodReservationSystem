@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "ثبت‌نام در سامانه";
+}
+<link rel="stylesheet" href="~/css/Authentication.css" />
+
+<div class="auth-container">
+    <h2>ثبت‌نام کاربر جدید</h2>
+
+    <form method="post" action="/Authentication/SignUp">
+        <input type="text" name="fullName" placeholder="نام و نام خانوادگی" required />
+        <input type="text" name="studentNumber" placeholder="شماره دانشجویی" required />
+        <input type="password" name="password" placeholder="رمز عبور" required />
+        <button type="submit">ثبت‌نام</button>
+    </form>
+
+    <p>حساب دارید؟ <a href="/Authentication/SignIn">ورود به سامانه</a></p>
+</div>
