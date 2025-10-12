@@ -1,0 +1,104 @@
+﻿body {
+    margin: 0;
+    font-family: "IRANSans", sans-serif;
+    background-color: #f4f6f9;
+}
+
+/* ======== نوار بالا ======== */
+.topbar {
+    background-color: #004b8d;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+    height: 55px;
+}
+
+.topbar-right .system-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topbar .wallet {
+    font-size: 14px;
+}
+
+.topbar .user-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* ======== سایدبار ======== */
+.sidebar {
+    background-color: #0066b2;
+    color: white;
+    width: 220px;
+    height: 100vh;
+    position: fixed;
+    right: 0;
+    top: 55px; /* زیر نوار بالا */
+    padding-top: 20px;
+    transition: width 0.3s, transform 0.3s;
+    z-index: 100;
+}
+
+    .sidebar.collapsed {
+        transform: translateX(220px);
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        margin: 10px 0;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
+
+        .sidebar a:hover {
+            background-color: #005094;
+        }
+
+/* ======== محتوای اصلی ======== */
+.content {
+    margin-right: 0;
+    padding: 40px;
+    transition: margin-right 0.3s;
+}
+
+/* وقتی منو بازه، فاصله بده */
+@media (min-width: 768px) {
+    .content {
+        margin-right: 220px;
+    }
+
+    .sidebar.collapsed ~ .content {
+        margin-right: 0;
+    }
+}
