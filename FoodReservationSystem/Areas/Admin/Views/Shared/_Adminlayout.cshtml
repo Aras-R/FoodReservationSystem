@@ -1,6 +1,77 @@
-﻿namespace FoodReservationSystem.Area.Admin.Views.Shared
-{
-    public class _Adminlayout
-    {
-    }
+﻿@{
+    var adminName = "مدیر سامانه"; // موقت، بعداً از Session یا Claims پر میشه
 }
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - بخش مدیریت سامانه رزرو غذا</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="~/css/admin-layout.css" />
+
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- ✅ نوار بالا -->
+    <header class="topbar bg-primary text-white d-flex justify-content-between align-items-center px-4 py-2">
+        <div class="d-flex align-items-center gap-3">
+            <button id="toggleSidebar" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h5 class="mb-0">پنل مدیریت سامانه رزرو غذا ⚙️</h5>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-user-shield"></i>
+            <span>@adminName</span>
+        </div>
+    </header>
+
+    <!-- ✅ منوی کناری -->
+    <aside id="sidebar" class="sidebar bg-light border-end">
+        <ul class="list-unstyled m-0 p-3">
+            <li class="mb-3">
+                <a href="/Admin/User/Index" class="text-dark text-decoration-none d-block">
+                    <i class="fas fa-users"></i> کاربران
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="/Admin/Food/Index" class="text-dark text-decoration-none d-block">
+                    <i class="fas fa-utensils"></i> غذاها
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="/Admin/FoodSchedule/Index" class="text-dark text-decoration-none d-block">
+                    <i class="fas fa-calendar-plus"></i> تعریف غذا
+                </a>
+            </li>
+            <li class="mb-3">
+                <a href="/Admin/Order/Index" class="text-dark text-decoration-none d-block">
+                    <i class="fas fa-receipt"></i> سفارشات
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- ✅ محتوای اصلی -->
+    <main id="mainContent" class="content p-4">
+        @RenderBody()
+    </main>
+
+    <!-- ✅ اسکریپت باز و بسته کردن منو -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleSidebar');
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+    </script>
+
+</body>
+</html>

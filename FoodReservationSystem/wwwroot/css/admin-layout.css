@@ -1,0 +1,61 @@
+﻿body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: #f5f7fa;
+}
+
+/* نوار بالا */
+.topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    height: 60px;
+}
+
+/* منوی کناری */
+.sidebar {
+    width: 240px;
+    transition: width 0.3s ease;
+    background-color: #f8f9fa;
+    position: fixed;
+    top: 60px;
+    bottom: 0;
+    right: 0;
+    overflow-y: auto;
+    border-left: 1px solid #dee2e6;
+}
+
+    .sidebar.collapsed {
+        width: 0;
+        overflow: hidden;
+    }
+
+/* محتوای اصلی */
+.content {
+    margin-top: 70px;
+    margin-right: 250px;
+    width: 100%;
+    transition: margin-right 0.3s ease;
+}
+
+.sidebar.collapsed + .content {
+    margin-right: 0;
+}
+
+/* لینک‌ها */
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+    .sidebar a:hover {
+        background-color: #007bff;
+        color: white !important;
+    }
