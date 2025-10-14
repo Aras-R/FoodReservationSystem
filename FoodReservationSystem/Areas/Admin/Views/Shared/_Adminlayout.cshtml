@@ -36,11 +36,30 @@
     <!-- ✅ منوی کناری -->
     <aside id="sidebar" class="sidebar bg-light border-end">
         <ul class="list-unstyled m-0 p-3">
+
+            <!-- 🔹 کاربران -->
             <li class="mb-3">
-                <a href="/Admin/User/Index" class="text-dark text-decoration-none d-block">
-                    <i class="fas fa-users"></i> کاربران
+                <a class="text-dark text-decoration-none d-flex justify-content-between align-items-center"
+                   data-bs-toggle="collapse" href="#usersSubmenu" role="button" aria-expanded="false" aria-controls="usersSubmenu">
+                    <span><i class="fas fa-users"></i> کاربران</span>
+                    <i class="fas fa-chevron-down small"></i>
                 </a>
+
+                <ul class="collapse list-unstyled ps-4 mt-2" id="usersSubmenu">
+                    <li class="mb-2">
+                        <a href="/Admin/User/Index" class="text-dark text-decoration-none">
+                            <i class="fas fa-list"></i> لیست دانشجویان
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Admin/User/Register" class="text-dark text-decoration-none">
+                            <i class="fas fa-user-plus"></i> ثبت دانشجوی جدید
+                        </a>
+                    </li>
+                </ul>
             </li>
+
+            <!-- 🔹 سایر منوها -->
             <li class="mb-3">
                 <a href="/Admin/Food/Index" class="text-dark text-decoration-none d-block">
                     <i class="fas fa-utensils"></i> غذاها
@@ -64,7 +83,8 @@
         @RenderBody()
     </main>
 
-    <!-- ✅ اسکریپت باز و بسته کردن منو -->
+    <!-- ✅ اسکریپت‌ها -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleSidebar');
@@ -72,7 +92,6 @@
             sidebar.classList.toggle('collapsed');
         });
     </script>
-
 
     @RenderSection("Scripts", required: false)
 </body>
