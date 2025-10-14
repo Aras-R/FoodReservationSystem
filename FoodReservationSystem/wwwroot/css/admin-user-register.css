@@ -1,0 +1,83 @@
+﻿body {
+    background-color: #f7f9fc;
+    font-family: 'Vazirmatn', sans-serif;
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.register-card {
+    background-color: #ffffff;
+    width: 500px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    padding: 30px;
+    direction: rtl;
+}
+
+.form-title {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.btn-submit {
+    background-color: #198754;
+    border: none;
+    padding: 10px 25px;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .btn-submit:hover {
+        background-color: #157347;
+    }
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+    .btn-cancel:hover {
+        background-color: #5a6268;
+    }
+
+.alert-message {
+    background-color: #e9f7ef;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+}

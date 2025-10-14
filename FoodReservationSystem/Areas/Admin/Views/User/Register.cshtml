@@ -1,0 +1,59 @@
+﻿@model FoodReservation.Application.Services.Users.Commands.RequestRegisterUserDto
+
+@{
+    ViewData["Title"] = "ثبت کاربر جدید";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-user-register.css" />
+
+<div class="register-container">
+    <div class="register-card">
+        <h3 class="form-title">🧑‍💼 ثبت کاربر جدید</h3>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert-message">@ViewBag.Message</div>
+        }
+
+        <!-- فرم ساده بدون asp-for -->
+        <form method="post" class="register-form">
+            <div class="form-group">
+                <label>شماره دانشجویی:</label>
+                <input type="text" name="StudentNumber" class="form-control" placeholder="مثلاً 40102563" required />
+            </div>
+
+            <div class="form-group">
+                <label>نام و نام خانوادگی:</label>
+                <input type="text" name="FullName" class="form-control" placeholder="مثلاً آراس رسول‌زاده" required />
+            </div>
+
+            <div class="form-group">
+                <label>رمز عبور:</label>
+                <input type="password" name="Password" class="form-control" placeholder="رمز عبور" required />
+            </div>
+
+            <div class="form-group">
+                <label>تکرار رمز عبور:</label>
+                <input type="password" name="RePassword" class="form-control" placeholder="تکرار رمز عبور" required />
+            </div>
+
+            <div class="form-group">
+                <label>نقش کاربر:</label>
+                <select name="Role" class="form-select">
+                    <option value="0">دانشجو</option>
+                    <option value="1">ادمین</option>
+                </select>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-submit">ثبت کاربر ✅</button>
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn-cancel">بازگشت</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

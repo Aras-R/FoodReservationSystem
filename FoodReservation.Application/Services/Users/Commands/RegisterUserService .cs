@@ -46,7 +46,7 @@ namespace FoodReservation.Application.Services.Users.Commands
                 {
                     StudentNumber = request.StudentNumber,
                     FullName = request.FullName,
-                    PassWord = request.Password,
+                    PassWord = hashedPassword,
                     Role = request.Role
                 };
 
@@ -64,19 +64,18 @@ namespace FoodReservation.Application.Services.Users.Commands
             }
         }
 
+    }
+    public class RequestRegisterUserDto
+    {
+        public string StudentNumber { get; set; }
+        public string FullName { get; set; }
+        public string Password { get; set; }
+        public string RePassword { get; set; }
+        public UserRole Role { get; set; } = UserRole.Student;
+    }
 
-        public class RequestRegisterUserDto
-        {
-            public string StudentNumber { get; set; }
-            public string FullName { get; set; }
-            public string Password { get; set; }
-            public string RePassword { get; set; }
-            public UserRole Role { get; set; } = UserRole.Student;
-        }
-
-        public class ResultRegisterUserDto
-        {
-            public int UserId { get; set; }
-        }
+    public class ResultRegisterUserDto
+    {
+        public int UserId { get; set; }
     }
 }

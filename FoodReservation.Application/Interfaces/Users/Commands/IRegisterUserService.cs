@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using FoodReservation.Application.Services.Users.Commands;
 using FoodReservation.Common.Dto;
-using static FoodReservation.Application.Services.Users.Commands.RegisterUserService;
 
 namespace FoodReservation.Application.Interfaces.Users.Commands
 {
