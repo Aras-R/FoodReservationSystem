@@ -1,4 +1,6 @@
 ﻿using FoodReservation.Application.Interfaces.Contexts;
+using FoodReservation.Application.Interfaces.FacadePatterns.UserFacade;
+using FoodReservation.Application.Services.Users.Facade;
 using FoodReservation.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +15,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
         options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
+builder.Services.AddScoped<IUsersFacade, UsersFacade>();
 
 // فعال‌سازی MVC
 builder.Services.AddControllersWithViews();
