@@ -1,7 +1,9 @@
 ﻿using FoodReservation.Application.Interfaces.Contexts;
 using FoodReservation.Application.Interfaces.FacadePatterns.UserFacade;
 using FoodReservation.Application.Interfaces.Users.Commands;
+using FoodReservation.Application.Interfaces.Users.Queries;
 using FoodReservation.Application.Services.Users.Commands;
+using FoodReservation.Application.Services.Users.Queries;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,15 @@ namespace FoodReservation.Application.Services.Users.Facade
             get
             {
                 return _registerUserService = _registerUserService ??  new RegisterUserService(_databaseContext);
+            }
+        }
+
+        private IGetUserService _getUserService;
+        public IGetUserService GetUserService
+        {
+            get
+            {
+                return _getUserService = _getUserService ?? new GetUserService(_databaseContext);
             }
         }
     }
