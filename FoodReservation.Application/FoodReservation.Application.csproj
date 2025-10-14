@@ -7,18 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\FacadePatterns\DailyFoods\Commands\" />
-    <Folder Include="Interfaces\FacadePatterns\DailyFoods\FacadeDailyFoods\" />
-    <Folder Include="Interfaces\FacadePatterns\DailyFoods\Queries\" />
-    <Folder Include="Interfaces\FacadePatterns\Foods\Commands\" />
-    <Folder Include="Interfaces\FacadePatterns\Foods\FacadeFoods\" />
-    <Folder Include="Interfaces\FacadePatterns\Foods\Queries\" />
-    <Folder Include="Interfaces\FacadePatterns\Reservations\Commands\" />
-    <Folder Include="Interfaces\FacadePatterns\Reservations\FacadeReservations\" />
-    <Folder Include="Interfaces\FacadePatterns\Reservations\Queries\" />
-    <Folder Include="Interfaces\FacadePatterns\Users\Commands\" />
-    <Folder Include="Interfaces\FacadePatterns\Users\FacadeUsers\" />
-    <Folder Include="Interfaces\FacadePatterns\Users\Queries\" />
+    <Folder Include="Interfaces\DailyFoods\Commands\" />
+    <Folder Include="Interfaces\DailyFoods\Queries\" />
+    <Folder Include="Interfaces\FacadePatterns\FoodFacade\" />
+    <Folder Include="Interfaces\FacadePatterns\DailyFoodFacade\" />
+    <Folder Include="Interfaces\FacadePatterns\Reservation\" />
+    <Folder Include="Interfaces\FacadePatterns\UserFacade\" />
+    <Folder Include="Interfaces\Foods\Commands\" />
+    <Folder Include="Interfaces\Foods\Queries\" />
+    <Folder Include="Interfaces\Reservations\Commands\" />
+    <Folder Include="Interfaces\Reservations\Queries\" />
+    <Folder Include="Interfaces\Users\Queries\" />
     <Folder Include="Services\DailyFoods\Commands\" />
     <Folder Include="Services\DailyFoods\FacadeDailyFoods\" />
     <Folder Include="Services\DailyFoods\Queries\" />
@@ -28,16 +27,17 @@
     <Folder Include="Services\Reservations\Commands\" />
     <Folder Include="Services\Reservations\FacadeReservations\" />
     <Folder Include="Services\Reservations\Queries\" />
-    <Folder Include="Services\Users\Commands\" />
     <Folder Include="Services\Users\FacadeUsers\" />
     <Folder Include="Services\Users\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FoodReservation.Common\FoodReservation.Common.csproj" />
     <ProjectReference Include="..\FoodReservation.Domain\FoodReservation.Domain.csproj" />
   </ItemGroup>
 
