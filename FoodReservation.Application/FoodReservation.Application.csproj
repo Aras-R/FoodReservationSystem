@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Interfaces\DailyFoods\Commands\" />
     <Folder Include="Interfaces\DailyFoods\Queries\" />
-    <Folder Include="Interfaces\FacadePatterns\FoodFacade\" />
     <Folder Include="Interfaces\FacadePatterns\DailyFoodFacade\" />
     <Folder Include="Interfaces\FacadePatterns\Reservation\" />
     <Folder Include="Interfaces\Foods\Queries\" />
@@ -18,7 +17,6 @@
     <Folder Include="Services\DailyFoods\Commands\" />
     <Folder Include="Services\DailyFoods\Facade\" />
     <Folder Include="Services\DailyFoods\Queries\" />
-    <Folder Include="Services\Foods\Facade\" />
     <Folder Include="Services\Foods\Queries\" />
     <Folder Include="Services\Reservations\Commands\" />
     <Folder Include="Services\Reservations\Facade\" />
