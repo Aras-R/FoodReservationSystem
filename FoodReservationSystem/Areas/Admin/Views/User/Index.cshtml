@@ -1,7 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<FoodReservation.Application.Services.Users.Queries.GetUserDto>
+
 @{
+    ViewData["Title"] = "لیست کاربران";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Aras</h2>
+<link rel="stylesheet" href="~/css/admin-user-list.css" />
+
+<div class="user-list-container">
+    <div class="header-section">
+        <h3>📋 لیست کاربران ثبت‌نام‌شده</h3>
+        <a asp-area="Admin" asp-controller="User" asp-action="Register" class="btn btn-primary">
+            ➕ ثبت کاربر جدید
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning mt-4 text-center">
+            هیچ کاربری ثبت نشده است ❗
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mt-3">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>ردیف</th>
+                        <th>شماره دانشجویی</th>
+                        <th>نام و نام خانوادگی</th>
+                        <th>نقش</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Select((x, i) => new { x, i }))
+                    {
+                        <tr>
+                            <td class="text-center">@(@user.i + 1)</td>
+                            <td class="text-center">@user.x.StudentNumber</td>
+                            <td>@user.x.FullName</td>
+                            <td class="text-center">
+                                @if (user.x.Role == "Admin")
+                                {
+                                    <span class="badge bg-danger">ادمین</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">دانشجو</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

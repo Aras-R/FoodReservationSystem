@@ -16,17 +16,16 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var result = _usersFacade.GetUserService.Execute();
+            return View(result.Data);
         }
 
-        // ✅ نمایش فرم ثبت کاربر
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        // ✅ ثبت کاربر جدید
         [HttpPost]
         public IActionResult Register(RequestRegisterUserDto request)
         {
