@@ -38,4 +38,9 @@ namespace FoodReservation.Application.Services.Users.Commands
             };
         }
     }
+
+    public class RemoveUserDto
+    {
+        public int Id { get; set; }
+    }
 }

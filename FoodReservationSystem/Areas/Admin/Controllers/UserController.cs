@@ -68,6 +68,14 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             return Json(user);
         }
 
+
+        //Users Remove
+        [HttpPost]
+        public IActionResult Remove([FromBody] RemoveUserDto request)
+        {
+            var result = _usersFacade.RemoveUserService.Execute(request.Id);
+            return Json(result);
+        }
     }
 
 }

@@ -20,7 +20,7 @@
 .sidebar {
     width: 240px;
     transition: width 0.3s ease;
-    background-color: #f8f9fa;
+    background-color: #ffd800;
     position: fixed;
     top: 60px;
     bottom: 0;

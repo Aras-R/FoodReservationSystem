@@ -6,6 +6,7 @@
 }
 
 <link rel="stylesheet" href="~/css/admin-user-list.css" />
+<link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css" />
 
 <div class="user-list-container">
     <div class="header-section">
@@ -37,7 +38,7 @@
                 <tbody>
                     @foreach (var user in Model.Select((x, i) => new { x, i }))
                     {
-                        <tr>
+                        <tr id="row-@user.x.Id">
                             <td class="text-center">@(@user.i + 1)</td>
                             <td class="text-center">@user.x.StudentNumber</td>
                             <td>@user.x.FullName</td>
@@ -54,6 +55,9 @@
                             <td class="text-center">
                                 <button class="btn btn-warning btn-sm edit-btn" data-id="@user.x.Id">
                                     ✏️ ویرایش
+                                </button>
+                                <button class="btn btn-danger btn-sm remove-btn" data-id="@user.x.Id">
+                                    🗑️ حذف
                                 </button>
                             </td>
                         </tr>
@@ -96,29 +100,27 @@
 </div>
 
 @section Scripts {
+    <script src="~/Sweetalert2/Sweetalert2.min.js"></script>
+
     <script>
+        // ✅ ویرایش کاربر
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const id = this.dataset.id;
-                console.log("در حال دریافت اطلاعات کاربر:", id);
-
                 fetch(`/Admin/User/Edit?id=${id}`)
-                    .then(res => {
-                        if (!res.ok) throw new Error("خطا در دریافت اطلاعات");
-                        return res.json();
-                    })
+                    .then(res => res.json())
                     .then(data => {
-                        console.log("داده دریافتی:", data);
+                        if (data.error) {
+                            Swal.fire('خطا', data.error, 'error');
+                            return;
+                        }
                         document.getElementById('editUserId').value = data.id;
                         document.getElementById('editStudentNumber').value = data.studentNumber;
                         document.getElementById('editFullName').value = data.fullName;
                         document.getElementById('editRole').value = data.role;
                         document.getElementById('editPanel').style.display = 'block';
                     })
-                    .catch(err => {
-                        console.error("خطا در واکشی:", err);
-                        alert("❌ خطا در دریافت اطلاعات کاربر.");
-                    });
+                    .catch(() => Swal.fire('خطا', '❌ خطا در دریافت اطلاعات کاربر', 'error'));
             });
         });
 
@@ -136,8 +138,6 @@
                 role: parseInt(document.getElementById('editRole').value)
             };
 
-            console.log("در حال ارسال:", data);
-
             fetch('/Admin/User/Edit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -145,10 +145,44 @@
             })
                 .then(res => res.json())
                 .then(result => {
-                    alert(result.message);
-                    if (result.isSuccess) location.reload();
+                    Swal.fire(result.isSuccess ? '✅ موفق' : '❌ خطا', result.message, result.isSuccess ? 'success' : 'error')
+                        .then(() => { if (result.isSuccess) location.reload(); });
                 })
-                .catch(err => console.error("خطا در ویرایش:", err));
+                .catch(() => Swal.fire('خطا', 'در ویرایش مشکلی پیش آمد', 'error'));
+        });
+
+        // 🗑️ حذف کاربر
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+
+                Swal.fire({
+                    title: 'آیا مطمئن هستید؟',
+                    text: "این عملیات غیرقابل بازگشت است!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بله، حذف شود',
+                    cancelButtonText: 'انصراف'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/Admin/User/Remove`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: parseInt(id) })
+                        })
+                            .then(res => res.json())
+                            .then(result => {
+                                Swal.fire(result.isSuccess ? '✅ موفق' : '❌ خطا', result.message, result.isSuccess ? 'success' : 'error');
+                                if (result.isSuccess) {
+                                    document.getElementById(`row-${id}`).remove();
+                                }
+                            })
+                            .catch(() => Swal.fire('خطا', 'در حذف کاربر مشکلی پیش آمد', 'error'));
+                    }
+                });
+            });
         });
     </script>
 }
