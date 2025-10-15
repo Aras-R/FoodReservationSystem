@@ -1,0 +1,39 @@
+﻿@model FoodReservation.Application.Services.Foods.Commands.RequestRegisterFoodDto
+
+@{
+    ViewData["Title"] = "ثبت غذای جدید";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-food-register.css" />
+
+<div class="food-register-container">
+    <h2>🍲 ثبت غذای جدید</h2>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-info mt-3">@ViewBag.Message</div>
+    }
+
+    <form action="/Admin/Food/Register" method="post" class="food-form">
+        <div class="form-group mb-3">
+            <label>نام غذا:</label>
+            <input type="text" name="Name" class="form-control" placeholder="مثلاً قورمه سبزی" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>قیمت (تومان):</label>
+            <input type="number" name="Price" class="form-control" placeholder="مثلاً 85000" required />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>توضیحات:</label>
+            <textarea name="Description" class="form-control" rows="3" placeholder="توضیح اختیاری درباره غذا..."></textarea>
+        </div>
+
+        <div class="form-actions d-flex gap-2">
+            <button type="submit" class="btn btn-success">💾 ثبت غذا</button>
+            <a href="/Admin/Food/Index" class="btn btn-secondary">↩️ بازگشت</a>
+        </div>
+    </form>
+</div>
