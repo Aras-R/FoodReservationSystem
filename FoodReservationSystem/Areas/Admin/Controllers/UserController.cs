@@ -14,12 +14,15 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             _usersFacade = usersFacade;
         }
 
+        //List of users
         public IActionResult Index()
         {
             var result = _usersFacade.GetUserService.Execute();
             return View(result.Data);
         }
 
+
+        //Users register
         [HttpGet]
         public IActionResult Register()
         {
@@ -46,5 +49,26 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
 
             return View();
         }
+
+
+        //Users Edit
+        [HttpPost]
+        public IActionResult Edit([FromBody] EditUserDto request) 
+        {
+            var result = _usersFacade.EditUserService.Execute(request);
+            return Json(result);
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var user = _usersFacade.EditUserService.GetById(id);
+            if (user == null)
+                return Json(new { error = "❌ کاربر یافت نشد" });
+
+            return Json(user);
+        }
+
     }
+
 }
+

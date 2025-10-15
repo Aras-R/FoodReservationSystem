@@ -10,7 +10,7 @@
 <div class="user-list-container">
     <div class="header-section">
         <h3>📋 لیست کاربران ثبت‌نام‌شده</h3>
-        <a asp-area="Admin" asp-controller="User" asp-action="Register" class="btn btn-primary">
+        <a href="/Admin/User/Register" class="btn btn-primary">
             ➕ ثبت کاربر جدید
         </a>
     </div>
@@ -31,6 +31,7 @@
                         <th>شماره دانشجویی</th>
                         <th>نام و نام خانوادگی</th>
                         <th>نقش</th>
+                        <th>عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +51,11 @@
                                     <span class="badge bg-success">دانشجو</span>
                                 }
                             </td>
+                            <td class="text-center">
+                                <button class="btn btn-warning btn-sm edit-btn" data-id="@user.x.Id">
+                                    ✏️ ویرایش
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -57,3 +63,105 @@
         </div>
     }
 </div>
+
+<!-- ✅ پنل ویرایش -->
+<div id="editPanel" class="edit-panel shadow-lg p-4 bg-white rounded">
+    <h5>✏️ ویرایش اطلاعات کاربر</h5>
+    <form id="editUserForm">
+        <input type="hidden" id="editUserId" />
+
+        <div class="mb-3">
+            <label>شماره دانشجویی:</label>
+            <input type="text" id="editStudentNumber" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>نام و نام خانوادگی:</label>
+            <input type="text" id="editFullName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>نقش:</label>
+            <select id="editRole" class="form-select">
+                <option value="0">دانشجو</option>
+                <option value="1">ادمین</option>
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" id="cancelEdit">❌ انصراف</button>
+            <button type="submit" class="btn btn-success">💾 ذخیره تغییرات</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+                console.log("در حال دریافت اطلاعات کاربر:", id);
+
+                fetch(`/Admin/User/Edit?id=${id}`)
+                    .then(res => {
+                        if (!res.ok) throw new Error("خطا در دریافت اطلاعات");
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log("داده دریافتی:", data);
+                        document.getElementById('editUserId').value = data.id;
+                        document.getElementById('editStudentNumber').value = data.studentNumber;
+                        document.getElementById('editFullName').value = data.fullName;
+                        document.getElementById('editRole').value = data.role;
+                        document.getElementById('editPanel').style.display = 'block';
+                    })
+                    .catch(err => {
+                        console.error("خطا در واکشی:", err);
+                        alert("❌ خطا در دریافت اطلاعات کاربر.");
+                    });
+            });
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', () => {
+            document.getElementById('editPanel').style.display = 'none';
+        });
+
+        document.getElementById('editUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = {
+                id: document.getElementById('editUserId').value,
+                studentNumber: document.getElementById('editStudentNumber').value,
+                fullName: document.getElementById('editFullName').value,
+                role: parseInt(document.getElementById('editRole').value)
+            };
+
+            console.log("در حال ارسال:", data);
+
+            fetch('/Admin/User/Edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    alert(result.message);
+                    if (result.isSuccess) location.reload();
+                })
+                .catch(err => console.error("خطا در ویرایش:", err));
+        });
+    </script>
+}
+
+<style>
+    #editPanel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        z-index: 1000;
+        border: 1px solid #ddd;
+        display: none;
+    }
+</style>

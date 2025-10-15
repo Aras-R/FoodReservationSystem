@@ -40,3 +40,20 @@
     padding: 6px 12px;
     border-radius: 8px;
 }
+
+
+/*for users Edit ///////////////////////////////*/
+.edit-panel {
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    width: 400px;
+    z-index: 1000;
+    border: 1px solid #ddd;
+    display: none;
+}
+
+    .edit-panel h5 {
+        margin-bottom: 20px;
+    }
