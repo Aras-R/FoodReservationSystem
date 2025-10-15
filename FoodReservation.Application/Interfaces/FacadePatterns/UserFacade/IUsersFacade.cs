@@ -12,6 +12,7 @@ namespace FoodReservation.Application.Interfaces.FacadePatterns.UserFacade
     {
         IRegisterUserService RegisterUserService { get; } 
         IGetUserService GetUserService { get; } 
-        IEditUserService EditUserService { get; } 
+        IEditUserService EditUserService { get; }
+        IRemoveUserService RemoveUserService { get; } 
     }
 }

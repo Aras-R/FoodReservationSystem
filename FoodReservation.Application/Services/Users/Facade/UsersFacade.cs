@@ -49,5 +49,14 @@ namespace FoodReservation.Application.Services.Users.Facade
                 return _editUserService = _editUserService ?? new EditUserService(_databaseContext);
             }
         }
+
+        private IRemoveUserService _removeUserService;
+        public IRemoveUserService RemoveUserService
+        {
+            get
+            {
+                return _removeUserService = _removeUserService ?? new RemoveUserService(_databaseContext);
+            }
+        }
     }
 }
