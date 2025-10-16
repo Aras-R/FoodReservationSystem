@@ -24,7 +24,7 @@ namespace FoodReservation.Application.Services.Users.Queries
                     FullName = u.FullName,
                     Role = u.Role.ToString()
                 })
-                .OrderBy(u => u.FullName)
+                .OrderBy(u => u.Id)
                 .ToList();
 
             return ResultDto<List<GetUserDto>>.Success(users, "لیست کاربران با موفقیت دریافت شد ✅");
