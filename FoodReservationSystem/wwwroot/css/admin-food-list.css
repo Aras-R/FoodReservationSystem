@@ -1,0 +1,47 @@
+﻿.food-list-container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    max-width: 1100px;
+    margin: 25px auto;
+    direction: rtl;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .header-section h3 {
+        font-weight: bold;
+        color: #333;
+    }
+
+.table th {
+    background-color: #007bff !important;
+    color: white;
+    font-weight: bold;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.btn-sm {
+    font-size: 0.85rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.alert {
+    font-size: 1rem;
+    border-radius: 10px;
+}

@@ -1,6 +1,186 @@
-﻿@{
-    ViewData["Title"] = "لیست غذا ها";
+﻿@model List<FoodReservation.Application.Services.Foods.Queries.GetFoodDto>
+
+@{
+    ViewData["Title"] = "لیست غذاها";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Aras</h1>
+<link rel="stylesheet" href="~/css/admin-food-list.css" />
+<link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css" />
+
+<div class="food-list-container">
+    <div class="header-section">
+        <h3>🍽️ لیست غذاهای ثبت‌شده</h3>
+        <a href="/Admin/Food/Register" class="btn btn-primary">
+            ➕ ثبت غذای جدید
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning mt-4 text-center">
+            هیچ غذایی ثبت نشده است ❗
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mt-3">
+            <table class="table table-striped table-bordered align-middle text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ردیف</th>
+                        <th>نام غذا</th>
+                        <th>قیمت (تومان)</th>
+                        <th>توضیحات</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var food in Model.Select((x, i) => new { x, i }))
+                    {
+                        <tr id="row-@food.x.Id">
+                            <td>@(food.i + 1)</td>
+                            <td>@food.x.Name</td>
+                            <td>@string.Format("{0:N0}", food.x.Price)</td>
+                            <td>@(string.IsNullOrWhiteSpace(food.x.Description) ? "—" : food.x.Description)</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm edit-btn" data-id="@food.x.Id">✏️ ویرایش</button>
+                                <button class="btn btn-danger btn-sm remove-btn" data-id="@food.x.Id">🗑️ حذف</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<!-- ✅ پنل ویرایش غذا -->
+<div id="editPanel" class="edit-panel shadow-lg p-4 bg-white rounded">
+    <h5>✏️ ویرایش اطلاعات غذا</h5>
+    <form id="editFoodForm">
+        <input type="hidden" id="editFoodId" />
+
+        <div class="mb-3">
+            <label>نام غذا:</label>
+            <input type="text" id="editFoodName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>قیمت (تومان):</label>
+            <input type="number" id="editFoodPrice" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>توضیحات:</label>
+            <textarea id="editFoodDescription" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" id="cancelEdit">❌ انصراف</button>
+            <button type="submit" class="btn btn-success">💾 ذخیره تغییرات</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/Sweetalert2/Sweetalert2.min.js"></script>
+
+    <script>
+        // ✏️ ویرایش غذا
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+                fetch(`/Admin/Food/Edit?id=${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.error) {
+                            Swal.fire('خطا', data.error, 'error');
+                            return;
+                        }
+
+                        document.getElementById('editFoodId').value = data.id;
+                        document.getElementById('editFoodName').value = data.name;
+                        document.getElementById('editFoodPrice').value = data.price;
+                        document.getElementById('editFoodDescription').value = data.description || "";
+                        document.getElementById('editPanel').style.display = 'block';
+                    })
+                    .catch(() => Swal.fire('خطا', '❌ خطا در دریافت اطلاعات غذا', 'error'));
+            });
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', () => {
+            document.getElementById('editPanel').style.display = 'none';
+        });
+
+        document.getElementById('editFoodForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const data = {
+                id: document.getElementById('editFoodId').value,
+                name: document.getElementById('editFoodName').value,
+                price: parseInt(document.getElementById('editFoodPrice').value),
+                description: document.getElementById('editFoodDescription').value
+            };
+
+            fetch('/Admin/Food/Edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    Swal.fire(result.isSuccess ? '✅ موفق' : '❌ خطا', result.message, result.isSuccess ? 'success' : 'error')
+                        .then(() => { if (result.isSuccess) location.reload(); });
+                })
+                .catch(() => Swal.fire('خطا', 'در ویرایش غذا مشکلی پیش آمد', 'error'));
+        });
+
+        // 🗑️ حذف غذا
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+
+                Swal.fire({
+                    title: 'آیا مطمئن هستید؟',
+                    text: "این عملیات غیرقابل بازگشت است!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بله، حذف شود',
+                    cancelButtonText: 'انصراف'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/Admin/Food/Remove`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: parseInt(id) })
+                        })
+                            .then(res => res.json())
+                            .then(result => {
+                                Swal.fire(result.isSuccess ? '✅ موفق' : '❌ خطا', result.message, result.isSuccess ? 'success' : 'error');
+                                if (result.isSuccess) {
+                                    document.getElementById(`row-${id}`).remove();
+                                }
+                            })
+                            .catch(() => Swal.fire('خطا', 'در حذف غذا مشکلی پیش آمد', 'error'));
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    #editPanel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        z-index: 1000;
+        border: 1px solid #ddd;
+        display: none;
+    }
+</style>

@@ -15,10 +15,11 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             _foodsFacade = foodsFacade;
         }
 
-
+        // Foods List
         public IActionResult Index()
         {
-            return View();
+            var result = _foodsFacade.GetFoodService.Execute();
+            return View(result.Data);
         }
 
         // Foods Register
