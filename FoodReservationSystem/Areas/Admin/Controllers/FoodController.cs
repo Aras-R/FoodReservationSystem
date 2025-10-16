@@ -46,5 +46,23 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
 
             return View();
         }
+
+        //Foods Edit
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var result = _foodsFacade.EditFoodService.GetById(id);
+            if(result == null)
+            {
+                return Json(new { error = "❌ غذا یافت نشد" });
+            }
+            return Json(result);
+        }
+        [HttpPost]
+        public IActionResult Edit([FromBody] EditFoodDto request)
+        {
+            var result = _foodsFacade.EditFoodService.Execute(request);
+            return Json(result);
+        }
     }
 }
