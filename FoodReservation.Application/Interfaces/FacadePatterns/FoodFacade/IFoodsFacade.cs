@@ -13,5 +13,6 @@ namespace FoodReservation.Application.Interfaces.FacadePatterns.FoodFacade
     {
         IRegisterFoodService RegisterFoodService { get; }
         IGetFoodService GetFoodService { get; }
+        IEditFoodService EditFoodService { get; }
     }
 }

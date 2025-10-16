@@ -42,5 +42,14 @@ namespace FoodReservation.Application.Services.Foods.Facade
                 return _getFoodService = _getFoodService ?? new GetFoodService(_databaseContext);
             }
         }
+
+        private IEditFoodService _editFoodService;
+        public IEditFoodService EditFoodService
+        {
+            get
+            {
+                return _editFoodService = _editFoodService ?? new EditFoodService(_databaseContext);
+            }
+        }
     }
 }
