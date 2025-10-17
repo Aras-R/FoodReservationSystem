@@ -5,28 +5,24 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/admin-user-list.css" />
-<link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css" />
+<link rel="stylesheet" href="~/css/admin-user-list.css?v=@DateTime.Now.Ticks" />
+<link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css?v=@DateTime.Now.Ticks" />
 
 <div class="user-list-container">
     <div class="header-section">
         <h3>📋 لیست کاربران ثبت‌نام‌شده</h3>
-        <a href="/Admin/User/Register" class="btn btn-primary">
-            ➕ ثبت کاربر جدید
-        </a>
+        <a href="/Admin/User/Register" class="btn-add">➕ ثبت کاربر جدید</a>
     </div>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-warning mt-4 text-center">
-            هیچ کاربری ثبت نشده است ❗
-        </div>
+        <div class="no-data">هیچ کاربری ثبت نشده است ❗</div>
     }
     else
     {
-        <div class="table-responsive mt-3">
-            <table class="table table-striped table-bordered align-middle">
-                <thead class="table-primary text-center">
+        <div class="table-wrapper">
+            <table class="user-table">
+                <thead>
                     <tr>
                         <th>ردیف</th>
                         <th>شماره دانشجویی</th>
@@ -39,26 +35,17 @@
                     @foreach (var user in Model.Select((x, i) => new { x, i }))
                     {
                         <tr id="row-@user.x.Id">
-                            <td class="text-center">@(@user.i + 1)</td>
-                            <td class="text-center">@user.x.StudentNumber</td>
+                            <td>@(@user.i + 1)</td>
+                            <td>@user.x.StudentNumber</td>
                             <td>@user.x.FullName</td>
-                            <td class="text-center">
-                                @if (user.x.Role == "Admin")
-                                {
-                                    <span class="badge bg-danger">ادمین</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-success">دانشجو</span>
-                                }
+                            <td>
+                                <span class="badge @(user.x.Role == "Admin" ? "badge-admin" : "badge-student")">
+                                    @(user.x.Role == "Admin" ? "ادمین" : "دانشجو")
+                                </span>
                             </td>
-                            <td class="text-center">
-                                <button class="btn btn-warning btn-sm edit-btn" data-id="@user.x.Id">
-                                    ✏️ ویرایش
-                                </button>
-                                <button class="btn btn-danger btn-sm remove-btn" data-id="@user.x.Id">
-                                    🗑️ حذف
-                                </button>
+                            <td class="actions">
+                                <button class="btn-edit" data-id="@user.x.Id">✏️ ویرایش</button>
+                                <button class="btn-delete" data-id="@user.x.Id">🗑️ حذف</button>
                             </td>
                         </tr>
                     }
@@ -69,44 +56,73 @@
 </div>
 
 <!-- ✅ پنل ویرایش -->
-<div id="editPanel" class="edit-panel shadow-lg p-4 bg-white rounded">
-    <h5>✏️ ویرایش اطلاعات کاربر</h5>
-    <form id="editUserForm">
-        <input type="hidden" id="editUserId" />
+<div id="editPanel" class="edit-panel">
+    <div class="panel-content">
+        <h4>✏️ ویرایش اطلاعات کاربر</h4>
+        <form id="editUserForm">
+            <input type="hidden" id="editUserId" />
 
-        <div class="mb-3">
             <label>شماره دانشجویی:</label>
-            <input type="text" id="editStudentNumber" class="form-control" />
-        </div>
+            <input type="text" id="editStudentNumber" />
 
-        <div class="mb-3">
             <label>نام و نام خانوادگی:</label>
-            <input type="text" id="editFullName" class="form-control" />
-        </div>
+            <input type="text" id="editFullName" />
 
-        <div class="mb-3">
             <label>نقش:</label>
-            <select id="editRole" class="form-select">
+            <select id="editRole">
                 <option value="0">دانشجو</option>
                 <option value="1">ادمین</option>
             </select>
-        </div>
 
-        <div class="d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-secondary" id="cancelEdit">❌ انصراف</button>
-            <button type="submit" class="btn btn-success">💾 ذخیره تغییرات</button>
-        </div>
-    </form>
+            <div class="panel-buttons">
+                <button type="button" id="cancelEdit">❌ انصراف</button>
+                <button type="submit" id="saveEdit">💾 ذخیره</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
     <script src="~/Sweetalert2/Sweetalert2.min.js"></script>
 
     <script>
-        // ✅ ویرایش کاربر
-        document.querySelectorAll('.edit-btn').forEach(btn => {
+        // 🗑️ حذف کاربر با SweetAlert2
+        document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function () {
                 const id = this.dataset.id;
+
+                Swal.fire({
+                    title: 'حذف کاربر؟',
+                    text: "آیا از حذف این کاربر مطمئن هستید؟",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'بله، حذف شود',
+                    cancelButtonText: 'انصراف'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        fetch(`/Admin/User/Remove`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: parseInt(id) })
+                        })
+                        .then(res => res.json())
+                        .then(r => {
+                            Swal.fire(r.isSuccess ? '✅ موفق' : '❌ خطا', r.message, r.isSuccess ? 'success' : 'error');
+                            if (r.isSuccess) document.getElementById(`row-${id}`).remove();
+                        })
+                        .catch(() => Swal.fire('خطا', 'در حذف کاربر مشکلی پیش آمد', 'error'));
+                    }
+                });
+            });
+        });
+
+        // ✏️ باز کردن پنل ویرایش
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+
                 fetch(`/Admin/User/Edit?id=${id}`)
                     .then(res => res.json())
                     .then(data => {
@@ -114,21 +130,24 @@
                             Swal.fire('خطا', data.error, 'error');
                             return;
                         }
+
                         document.getElementById('editUserId').value = data.id;
                         document.getElementById('editStudentNumber').value = data.studentNumber;
                         document.getElementById('editFullName').value = data.fullName;
                         document.getElementById('editRole').value = data.role;
-                        document.getElementById('editPanel').style.display = 'block';
+                        document.getElementById('editPanel').classList.add('show');
                     })
                     .catch(() => Swal.fire('خطا', '❌ خطا در دریافت اطلاعات کاربر', 'error'));
             });
         });
 
+        // ❌ بستن پنل
         document.getElementById('cancelEdit').addEventListener('click', () => {
-            document.getElementById('editPanel').style.display = 'none';
+            document.getElementById('editPanel').classList.remove('show');
         });
 
-        document.getElementById('editUserForm').addEventListener('submit', function (e) {
+        // 💾 ذخیره تغییرات
+        document.getElementById('editUserForm').addEventListener('submit', e => {
             e.preventDefault();
 
             const data = {
@@ -143,59 +162,12 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
-                .then(res => res.json())
-                .then(result => {
-                    Swal.fire(result.isSuccess ? '✅ موفق' : '❌ خطا', result.message, result.isSuccess ? 'success' : 'error')
-                        .then(() => { if (result.isSuccess) location.reload(); });
-                })
-                .catch(() => Swal.fire('خطا', 'در ویرایش مشکلی پیش آمد', 'error'));
-        });
-
-        // 🗑️ حذف کاربر
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const id = this.dataset.id;
-
-                Swal.fire({
-                    title: 'آیا مطمئن هستید؟',
-                    text: "این عملیات غیرقابل بازگشت است!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'بله، حذف شود',
-                    cancelButtonText: 'انصراف'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`/Admin/User/Remove`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: parseInt(id) })
-                        })
-                            .then(res => res.json())
-                            .then(result => {
-                                Swal.fire(result.isSuccess ? '✅ موفق' : '❌ خطا', result.message, result.isSuccess ? 'success' : 'error');
-                                if (result.isSuccess) {
-                                    document.getElementById(`row-${id}`).remove();
-                                }
-                            })
-                            .catch(() => Swal.fire('خطا', 'در حذف کاربر مشکلی پیش آمد', 'error'));
-                    }
-                });
-            });
+            .then(res => res.json())
+            .then(r => {
+                Swal.fire(r.isSuccess ? '✅ موفق' : '❌ خطا', r.message, r.isSuccess ? 'success' : 'error')
+                    .then(() => { if (r.isSuccess) location.reload(); });
+            })
+            .catch(() => Swal.fire('خطا', 'در ذخیره تغییرات مشکلی پیش آمد', 'error'));
         });
     </script>
 }
-
-<style>
-    #editPanel {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 400px;
-        z-index: 1000;
-        border: 1px solid #ddd;
-        display: none;
-    }
-</style>

@@ -1,61 +1,203 @@
-﻿body {
-    display: flex;
-    min-height: 100vh;
+﻿/* ---------------------------
+   🔹 تنظیمات پایه
+--------------------------- */
+* {
     margin: 0;
-    font-family: 'Vazirmatn', sans-serif;
-    background-color: #f5f7fa;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* نوار بالا */
+body {
+    font-family: "Vazirmatn", "IRANSans", sans-serif;
+    background-color: #f1f4f9;
+    color: #222;
+    direction: rtl;
+    overflow-x: hidden;
+}
+
+/* ---------------------------
+   🔹 نوار بالا
+--------------------------- */
 .topbar {
     position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1000;
-    height: 60px;
-}
-
-/* منوی کناری */
-.sidebar {
-    width: 240px;
-    transition: width 0.3s ease;
-    background-color: #ffd800;
-    position: fixed;
-    top: 60px;
-    bottom: 0;
-    right: 0;
-    overflow-y: auto;
-    border-left: 1px solid #dee2e6;
-}
-
-    .sidebar.collapsed {
-        width: 0;
-        overflow: hidden;
-    }
-
-/* محتوای اصلی */
-.content {
-    margin-top: 70px;
-    margin-right: 250px;
-    width: 100%;
-    transition: margin-right 0.3s ease;
-}
-
-.sidebar.collapsed + .content {
-    margin-right: 0;
-}
-
-/* لینک‌ها */
-.sidebar a {
+    top: 10px;
+    right: 5px;
+    left: 5px;
+    height: 65px;
+    background-color: #27374D;
+    color: #fff;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    justify-content: space-between;
+    padding: 0 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+    z-index: 1000;
+    border-radius: 10px;
 }
 
-    .sidebar a:hover {
-        background-color: #007bff;
-        color: white !important;
+    .topbar .system-title {
+        font-size: 1.1rem;
+        font-weight: 500;
     }
+
+    .topbar button {
+        background-color: #394867;
+        border: none;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .topbar button:hover {
+            background-color: #526D82;
+        }
+
+/* ---------------------------
+   🔹 سایدبار
+--------------------------- */
+.sidebar {
+    position: fixed;
+    top: 90px;
+    right: 0;
+    width: 250px;
+    height: 630px;
+    background-color: #394867;
+    color: #fff;
+    transition: all 0.4s ease;
+    overflow-y: auto;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    box-shadow: -3px 0 6px rgba(0,0,0,0.3);
+    z-index: 999;
+    padding-top: 15px;
+}
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 5px;
+    }
+
+    .sidebar a,
+    .sidebar button.submenu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: none;
+        border: none;
+        color: white;
+        width: 100%;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 400;
+        padding: 10px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .sidebar a:hover,
+        .sidebar button.submenu-toggle:hover {
+            background-color: rgba(255,255,255,0.12);
+        }
+
+    /* آیکون‌ها و فلش‌ها */
+    .sidebar i {
+        margin-left: 10px;
+        font-size: 1.1rem;
+    }
+
+.arrow {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+}
+
+.submenu-toggle.open .arrow {
+    transform: rotate(90deg);
+}
+
+/* ---------------------------
+   🔹 زیرمنو
+--------------------------- */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding-right: 15px;
+}
+
+    .submenu.open {
+        max-height: 300px;
+    }
+
+/* ---------------------------
+   🔹 حالت بسته
+--------------------------- */
+.sidebar.collapsed {
+    width: 10px;
+    overflow: hidden;
+}
+
+    .sidebar.collapsed a span,
+    .sidebar.collapsed button.submenu-toggle span {
+        display: none;
+    }
+
+    .sidebar.collapsed .arrow {
+        display: none;
+    }
+
+    .sidebar.collapsed::-webkit-scrollbar {
+        display: none;
+    }
+
+/* ---------------------------
+   🔹 محتوای اصلی
+--------------------------- */
+.content {
+    margin-top: 65px;
+    margin-right: 250px;
+    padding: 30px;
+    transition: all 0.4s ease;
+}
+
+.sidebar.collapsed ~ .content {
+    margin-right: 90px;
+}
+
+/* ---------------------------
+   🔹 واکنش‌گرایی
+--------------------------- */
+@media (max-width: 900px) {
+    .sidebar {
+        right: -250px;
+        border-radius: 0;
+    }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+    .content {
+        margin-right: 0;
+    }
+}
+
+/* ---------------------------
+   ✨ افکت‌های ظریف
+--------------------------- */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.25);
+    border-radius: 3px;
+}

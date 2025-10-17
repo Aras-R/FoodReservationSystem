@@ -1,5 +1,6 @@
 ﻿@{
-    var adminName = "مدیر سامانه"; // موقت، بعداً از Session یا Claims پر میشه
+    Layout = null;
+    var adminName = "مدیر سامانه";
 }
 
 <!DOCTYPE html>
@@ -8,107 +9,69 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - بخش مدیریت سامانه رزرو غذا</title>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
-    <link rel="stylesheet" href="~/css/admin-layout.css" />
-
-    <!-- Icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/css/admin-layout.css?v=@DateTime.Now.Ticks" />
 </head>
 <body>
 
-    <!-- ✅ نوار بالا -->
-    <header class="topbar bg-primary text-white d-flex justify-content-between align-items-center px-4 py-2">
-        <div class="d-flex align-items-center gap-3">
-            <button id="toggleSidebar" class="btn btn-outline-light btn-sm">
-                <i class="fas fa-bars"></i>
+    <header class="topbar">
+        <div class="left">
+            <button id="toggleSidebar" class="menu-btn">
+                ☰
             </button>
-            <span class="system-title"> پنل مدیریت سامانه رزرو غذا</span>
+            <span class="system-title">پنل مدیریت سامانه رزرو غذا</span>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-            <i class="fas fa-user-shield"></i>
-            <span>@adminName</span>
+        <div class="right">
+            👤 <span>@adminName</span>
         </div>
     </header>
 
-    <!-- ✅ منوی کناری -->
-    <aside id="sidebar" class="sidebar bg-light border-end">
-        <ul class="list-unstyled m-0 p-3">
-
-            <!-- 🔹 کاربران -->
-            <li class="mb-3">
-                <a class="text-dark text-decoration-none d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#usersSubmenu" role="button" aria-expanded="false" aria-controls="usersSubmenu">
-                    <span><i class="fas fa-users"></i> کاربران</span>
-                    <i class="fas fa-chevron-down small"></i>
-                </a>
-
-                <ul class="collapse list-unstyled ps-4 mt-2" id="usersSubmenu">
-                    <li class="mb-2">
-                        <a href="/Admin/User/Index" class="text-dark text-decoration-none">
-                            <i class="fas fa-list"></i> لیست دانشجویان
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/Admin/User/Register" class="text-dark text-decoration-none">
-                            <i class="fas fa-user-plus"></i> ثبت دانشجوی جدید
-                        </a>
-                    </li>
+    <aside id="sidebar" class="sidebar">
+        <ul>
+            <li>
+                <button class="submenu-toggle">
+                    👥 <span>کاربران</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                </button>
+                <ul class="submenu">
+                    <li><a href="/Admin/User/Index">📋 لیست دانشجویان</a></li>
+                    <li><a href="/Admin/User/Register">➕ ثبت دانشجوی جدید</a></li>
                 </ul>
             </li>
 
-            <!-- 🔹 غذا -->
-            <li class="mb-3">
-                <a class="text-dark text-decoration-none d-flex justify-content-between align-items-center"
-                   data-bs-toggle="collapse" href="#foodsSubmenu" role="button" aria-expanded="false" aria-controls="foodsSubmenu">
-                    <span><i class="fas fa-utensils"></i> غذا</span>
-                    <i class="fas fa-chevron-down small"></i>
-                </a>
-
-                <ul class="collapse list-unstyled ps-4 mt-2" id="foodsSubmenu">
-                    <li class="mb-2">
-                        <a href="/Admin/Food/Index" class="text-dark text-decoration-none">
-                            <i class="fas fa-list"></i> لیست غذاها
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/Admin/Food/Register" class="text-dark text-decoration-none">
-                            <i class="fas fa-plus-circle"></i> ثبت غذای جدید
-                        </a>
-                    </li>
+            <li>
+                <button class="submenu-toggle">
+                    🍽️ <span>غذا</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                </button>
+                <ul class="submenu">
+                    <li><a href="/Admin/Food/Index">📋 لیست غذاها</a></li>
+                    <li><a href="/Admin/Food/Register">➕ ثبت غذای جدید</a></li>
                 </ul>
             </li>
 
-            <!-- 🔹 برنامه غذایی -->
-            <li class="mb-3">
-                <a href="/Admin/FoodSchedule/Index" class="text-dark text-decoration-none d-block">
-                    <i class="fas fa-calendar-plus"></i> تعریف برنامه غذایی
-                </a>
-            </li>
-
-            <!-- 🔹 سفارشات -->
-            <li class="mb-3">
-                <a href="/Admin/Order/Index" class="text-dark text-decoration-none d-block">
-                    <i class="fas fa-receipt"></i> سفارشات
-                </a>
-            </li>
+            <li><a href="/Admin/FoodSchedule/Index">🗓️ تعریف برنامه غذایی</a></li>
+            <li><a href="/Admin/Order/Index">🧾 سفارشات</a></li>
         </ul>
     </aside>
 
-    <!-- ✅ محتوای اصلی -->
-    <main id="mainContent" class="content p-4">
+    <main id="mainContent" class="content">
         @RenderBody()
     </main>
 
-    <!-- ✅ اسکریپت‌ها -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleSidebar');
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
+        });
+
+        document.querySelectorAll('.submenu-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const submenu = btn.nextElementSibling;
+                submenu.classList.toggle('open');
+                btn.querySelector('.arrow').classList.toggle('rotated');
+            });
         });
     </script>
 

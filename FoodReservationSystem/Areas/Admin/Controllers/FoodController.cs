@@ -64,5 +64,13 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             var result = _foodsFacade.EditFoodService.Execute(request);
             return Json(result);
         }
+
+        // Foods Remove
+        [HttpPost]
+        public IActionResult Remove([FromBody] RemoveFoodDto request)
+        {
+            var result = _foodsFacade.RemoveFoodService.Execute(request.Id);
+            return Json(result);
+        }
     }
 }
