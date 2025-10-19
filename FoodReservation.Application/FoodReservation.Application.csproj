@@ -8,11 +8,9 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\DailyFoods\Queries\" />
-    <Folder Include="Interfaces\FacadePatterns\DailyFoodFacade\" />
     <Folder Include="Interfaces\FacadePatterns\Reservation\" />
     <Folder Include="Interfaces\Reservations\Commands\" />
     <Folder Include="Interfaces\Reservations\Queries\" />
-    <Folder Include="Services\DailyFoods\Facade\" />
     <Folder Include="Services\DailyFoods\Queries\" />
     <Folder Include="Services\Reservations\Commands\" />
     <Folder Include="Services\Reservations\Facade\" />
