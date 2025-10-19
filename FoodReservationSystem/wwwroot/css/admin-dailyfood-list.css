@@ -1,0 +1,68 @@
+﻿.page-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.alert {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.dailyfood-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: IRANSans, sans-serif;
+}
+
+    .dailyfood-table th,
+    .dailyfood-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .dailyfood-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .dailyfood-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+.btn-edit,
+.btn-delete {
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.btn-edit {
+    background-color: #007bff;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+
+.btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.btn-delete:hover {
+    background-color: #a71d2a;
+}
+
+.no-data {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}

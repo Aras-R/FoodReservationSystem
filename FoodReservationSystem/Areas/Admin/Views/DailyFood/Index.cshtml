@@ -1,4 +1,62 @@
-﻿@{
-    Layout = null;
+﻿@using System.Globalization
+@model List<FoodReservation.Application.Services.DailyFoods.Queries.DailyFoodListDto>
+
+@{
+    ViewData["Title"] = "لیست برنامه‌های غذایی روزانه";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var persian = new CultureInfo("fa-IR");
 }
-<h1>Aras</h1>
+
+<link rel="stylesheet" href="~/css/admin-dailyfood-list.css?v=@DateTime.Now.Ticks" />
+
+<h3 class="page-title">📋 لیست برنامه‌های غذایی روزانه</h3>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert">@TempData["Error"]</div>
+}
+
+
+<table class="dailyfood-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>روز هفته</th>
+            <th>تاریخ</th>
+            <th>وعده غذایی</th>
+            <th>نام غذا</th>
+            <th>عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.DayOfWeek</td>
+                    <td>
+                        @(item.Date > DateTime.MinValue
+                                        ? item.Date.ToString("yyyy/MM/dd", persian)
+                                        : "-")
+                    </td>
+                    <td>@item.MealType</td>
+                    <td>@item.FoodName</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "DailyFood", new { area = "Admin", id = item.Id })" class="btn-edit">ویرایش</a>
+                        <a href="@Url.Action("Delete", "DailyFood", new { area = "Admin", id = item.Id })" class="btn-delete">حذف</a>
+                    </td>
+                </tr>
+                i++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="no-data">هیچ برنامه‌ای ثبت نشده است</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -3,6 +3,7 @@ using FoodReservation.Application.Interfaces.DailyFoods.Queries;
 using FoodReservation.Common.Dto;
 using FoodReservation.Domain.Enums.MealType;
 using FoodReservation.Domain.Enums.WeekDay;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,15 @@ namespace FoodReservation.Application.Services.DailyFoods.Queries
         public ResultDto<List<DailyFoodListDto>> Execute()
         {
             var data = _databaseContext.DailyFoods
+                .Include(d => d.Food)
+                .AsEnumerable()
                 .Select(d => new DailyFoodListDto
                 {
                     Id = d.Id,
                     DayOfWeek = d.DayOfWeek.ToString(),
-                    Date = d.Date.ToString("yyyy-MM-dd"),
+                    Date = d.Date,
                     MealType = d.MealType.ToString(),
+                    FoodId = d.FoodId,
                     FoodName = d.Food != null ? d.Food.Name : "-"
                 })
                 .OrderBy(d => d.Date)
@@ -40,9 +44,10 @@ namespace FoodReservation.Application.Services.DailyFoods.Queries
     public class DailyFoodListDto
     {
         public int Id { get; set; }
-        public string DayOfWeek { get; set; }   
-        public string Date { get; set; }        
-        public string MealType { get; set; }    
+        public string DayOfWeek { get; set; }
+        public DateTime Date { get; set; }
+        public string MealType { get; set; }
+        public int? FoodId { get; set; }    
         public string FoodName { get; set; }
     }
 }

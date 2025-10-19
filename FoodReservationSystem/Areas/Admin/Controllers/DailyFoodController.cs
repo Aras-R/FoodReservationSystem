@@ -21,8 +21,39 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
+            var result = _dailyFoodFacade.GetDailyFoodService.Execute();
+
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return View(new List<FoodReservation.Application.Services.DailyFoods.Queries.DailyFoodListDto>());
+            }
+
+            foreach (var item in result.Data)
+            {
+                item.DayOfWeek = item.DayOfWeek switch
+                {
+                    nameof(WeekDay.Saturday) => "شنبه",
+                    nameof(WeekDay.Sunday) => "یک‌شنبه",
+                    nameof(WeekDay.Monday) => "دوشنبه",
+                    nameof(WeekDay.Tuesday) => "سه‌شنبه",
+                    nameof(WeekDay.Wednesday) => "چهارشنبه",
+                    nameof(WeekDay.Thursday) => "پنج‌شنبه",
+                    nameof(WeekDay.Friday) => "جمعه",
+                    _ => item.DayOfWeek
+                };
+
+                item.MealType = item.MealType switch
+                {
+                    nameof(MealType.Breakfast) => "صبحانه",
+                    nameof(MealType.Lunch) => "ناهار",
+                    nameof(MealType.Dinner) => "شام",
+                    _ => item.MealType
+                };
+            }
+
+            return View(result.Data);
+        }        
 
         [HttpGet]
         public IActionResult Register()
