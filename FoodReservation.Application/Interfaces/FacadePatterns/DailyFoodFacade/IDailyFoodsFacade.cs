@@ -1,4 +1,5 @@
 ﻿using FoodReservation.Application.Interfaces.DailyFoods.Commands;
+using FoodReservation.Application.Interfaces.DailyFoods.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace FoodReservation.Application.Interfaces.FacadePatterns.DailyFoodFacade
     public interface IDailyFoodsFacade
     {
         IRegisterDailyFoodService RegisterDailyFoodService { get; }
+        IGetDailyFoodService GetDailyFoodService { get; }
     }
 }

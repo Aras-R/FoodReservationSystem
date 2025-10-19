@@ -1,7 +1,9 @@
 ﻿using FoodReservation.Application.Interfaces.Contexts;
 using FoodReservation.Application.Interfaces.DailyFoods.Commands;
+using FoodReservation.Application.Interfaces.DailyFoods.Queries;
 using FoodReservation.Application.Interfaces.FacadePatterns.DailyFoodFacade;
 using FoodReservation.Application.Services.DailyFoods.Commands;
+using FoodReservation.Application.Services.DailyFoods.Queries;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,15 @@ namespace FoodReservation.Application.Services.DailyFoods.Facade
             get
             {
                 return _registerDailyFoodService = _registerDailyFoodService ?? new RegisterDailyFoodService(_databaseContext);
+            }
+        }
+
+        private IGetDailyFoodService _getDailyFoodService;
+        public IGetDailyFoodService GetDailyFoodService
+        {
+            get
+            {
+                return _getDailyFoodService = _getDailyFoodService ?? new GetDailyFoodService(_databaseContext);
             }
         }
     }
