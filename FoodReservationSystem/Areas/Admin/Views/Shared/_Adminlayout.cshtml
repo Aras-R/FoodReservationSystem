@@ -31,7 +31,7 @@
             <li>
                 <button class="submenu-toggle">
                     👥 <span>کاربران</span>
-                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" /></svg>
                 </button>
                 <ul class="submenu">
                     <li><a href="/Admin/User/Index">📋 لیست دانشجویان</a></li>
@@ -42,7 +42,7 @@
             <li>
                 <button class="submenu-toggle">
                     🍽️ <span>غذا</span>
-                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" /></svg>
                 </button>
                 <ul class="submenu">
                     <li><a href="/Admin/Food/Index">📋 لیست غذاها</a></li>
@@ -50,10 +50,21 @@
                 </ul>
             </li>
 
-            <li><a href="/Admin/FoodSchedule/Index">🗓️ تعریف برنامه غذایی</a></li>
+            <li>
+                <button class="submenu-toggle">
+                    🗓️ <span>برنامه غذایی</span>
+                    <svg class="arrow" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" /></svg>
+                </button>
+                <ul class="submenu">
+                    <li><a href="/Admin/DailyFood/Index">📋 لیست غذاهای تعریف‌شده</a></li>
+                    <li><a href="/Admin/DailyFood/Register">➕ تعریف غذا</a></li>
+                </ul>
+            </li>
+
             <li><a href="/Admin/Order/Index">🧾 سفارشات</a></li>
         </ul>
     </aside>
+
 
     <main id="mainContent" class="content">
         @RenderBody()

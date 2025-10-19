@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FoodReservation.Application.Interfaces.FacadePatterns.DailyFoodFacade
 {
-    public interface IDailyFoodFacade
+    public interface IDailyFoodsFacade
     {
         IRegisterDailyFoodService RegisterDailyFoodService { get; }
     }

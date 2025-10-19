@@ -21,7 +21,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<IUsersFacade, UsersFacade>();
 builder.Services.AddScoped<IFoodsFacade, FoodsFacade>();
-builder.Services.AddScoped<IDailyFoodFacade, DailyFoodFacade>();
+builder.Services.AddScoped<IDailyFoodsFacade, DailyFoodFacade>();
 
 // فعال‌سازی MVC
 builder.Services.AddControllersWithViews();

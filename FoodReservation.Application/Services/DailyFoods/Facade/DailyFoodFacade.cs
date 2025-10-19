@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FoodReservation.Application.Services.DailyFoods.Facade
 {
-    public class DailyFoodFacade: IDailyFoodFacade
+    public class DailyFoodFacade: IDailyFoodsFacade
     {
         private readonly IDatabaseContext _databaseContext;
         private readonly IHostingEnvironment _environment;

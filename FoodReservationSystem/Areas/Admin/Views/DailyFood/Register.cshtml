@@ -1,0 +1,133 @@
+﻿@model FoodReservation.Application.Services.DailyFoods.Commands.RequestRegisterDailyFoodDto
+
+@{
+    ViewData["Title"] = "تعریف برنامه غذایی روزانه";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/admin-dailyfood-register.css?v=@DateTime.Now.Ticks" />
+<link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css?v=@DateTime.Now.Ticks" />
+
+<div class="register-page">
+    <div class="register-card">
+        <h3 class="form-title">📅 تعریف برنامه غذایی روزانه</h3>
+
+        <form id="dailyFoodForm" method="post" class="register-form">
+            <div class="form-group">
+                <label>روز هفته:</label>
+                <select id="DayOfWeek" name="DayOfWeek" required>
+                    <option value="">انتخاب کنید</option>
+                    @foreach (var day in ViewBag.Days)
+                    {
+                        <option value="@day.Value">@day.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>تاریخ‌های پیشنهادی:</label>
+                <select id="DateSelect" name="Date" required>
+                    <option value="">ابتدا روز هفته را انتخاب کنید</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>نوع وعده غذایی:</label>
+                <select name="MealType" required>
+                    <option value="">انتخاب کنید</option>
+                    @foreach (var meal in ViewBag.MealTypes)
+                    {
+                        <option value="@meal.Value">@meal.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>غذا:</label>
+                <select name="FoodId" required>
+                    <option value="">انتخاب غذا</option>
+                    @foreach (var food in ViewBag.Foods)
+                    {
+                        <option value="@food.Id">@food.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-submit">✅ ثبت برنامه</button>
+                <a href="/Admin/DailyFood/Index" class="btn-cancel">↩️ بازگشت</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Sweetalert2/Sweetalert2.min.js"></script>
+    <script>
+        // واکنش به تغییر روز هفته و پر کردن تاریخ‌ها
+        document.getElementById("DayOfWeek").addEventListener("change", function () {
+            const dayValue = parseInt(this.value);
+            const dateSelect = document.getElementById("DateSelect");
+            dateSelect.innerHTML = "";
+
+            if (isNaN(dayValue)) {
+                dateSelect.innerHTML = '<option value="">روز هفته را انتخاب کنید</option>';
+                return;
+            }
+
+            const today = new Date();
+            let todayEnum = (today.getDay() + 1) % 7;
+            let diff = dayValue - todayEnum;
+            if (diff < 0) diff += 7;
+
+            for (let i = 0; i < 3; i++) {
+                const nextDate = new Date(today);
+                nextDate.setDate(today.getDate() + diff + (i * 7));
+
+                const isoDate = nextDate.toISOString().split('T')[0];
+
+                const farsiDate = nextDate.toLocaleDateString('fa-IR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                const parts = farsiDate.split(" ");
+                const formattedDate = `${parts[0]} ${parts[1]} ${parts[2]}`;
+
+                const option = document.createElement("option");
+                option.value = isoDate;
+                option.textContent = formattedDate;
+                dateSelect.appendChild(option);
+            }
+        });
+
+        // ارسال فرم با AJAX و نمایش SweetAlert
+        document.getElementById("dailyFoodForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+
+            fetch("/Admin/DailyFood/Register", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.isSuccess) {
+                    Swal.fire({
+                        title: "ثبت موفق ✅",
+                        text: result.message,
+                        icon: "success",
+                        confirmButtonText: "باشه"
+                    });
+                    form.reset();
+                    document.getElementById("DateSelect").innerHTML = '<option value="">ابتدا روز هفته را انتخاب کنید</option>';
+                } else {
+                    Swal.fire("خطا", result.message, "error");
+                }
+            })
+            .catch(() => Swal.fire("خطا", "مشکلی در ثبت برنامه پیش آمد!", "error"));
+        });
+    </script>
+}
