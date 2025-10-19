@@ -13,10 +13,10 @@ namespace FoodReservation.Domain.Entities.DailyFoods
     public class DailyFood
     {
         public int Id { get; set; }
+        public DateTime Date { get; set; }
         public WeekDay DayOfWeek { get; set; }
         public MealType MealType { get; set; }
-
-        public int FoodId { get; set; }
+        public int? FoodId { get; set; }
         public Food Food { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
          
