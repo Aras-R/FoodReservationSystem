@@ -19,6 +19,8 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             _foodFacade = foodFacade;
         }
 
+
+        //List DailyFoods
         public IActionResult Index()
         {
             var result = _dailyFoodFacade.GetDailyFoodService.Execute();
@@ -53,8 +55,9 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             }
 
             return View(result.Data);
-        }        
+        }
 
+        //Register DailyFoods
         [HttpGet]
         public IActionResult Register()
         {
