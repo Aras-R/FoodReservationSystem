@@ -116,5 +116,14 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
 
             return Json(new { isSuccess = false, message = result.Message });
         }
+
+
+        //Remove DailyFoods
+        [HttpPost]
+        public IActionResult Remove([FromBody] RemoveDailyFoodDto request)
+        {
+            var result = _dailyFoodFacade.RemoveDailyFoodService.Execute(request.Id);
+            return Json(result);
+        }
     }
 }

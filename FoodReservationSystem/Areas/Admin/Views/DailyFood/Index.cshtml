@@ -8,6 +8,8 @@
 }
 
 <link rel="stylesheet" href="~/css/admin-dailyfood-list.css?v=@DateTime.Now.Ticks" />
+<link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css?v=@DateTime.Now.Ticks" />
+
 
 <h3 class="page-title">📋 لیست برنامه‌های غذایی روزانه</h3>
 
@@ -46,8 +48,8 @@
                     <td>@item.FoodName</td>
                     <td>
                         <a href="@Url.Action("Edit", "DailyFood", new { area = "Admin", id = item.Id })" class="btn-edit">ویرایش</a>
-                        <a href="@Url.Action("Delete", "DailyFood", new { area = "Admin", id = item.Id })" class="btn-delete">حذف</a>
-                    </td>
+                    <button type="button" class="btn-delete" onclick="confirmDelete(@item.Id)">حذف</button>
+            </td>
                 </tr>
                 i++;
             }
@@ -60,3 +62,51 @@
         }
     </tbody>
 </table>
+
+
+@section Scripts {
+    <script src="~/Sweetalert2/Sweetalert2.min.js"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'آیا مطمئن هستید؟',
+                text: "این عملیات قابل بازگشت نیست!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'بله، حذف شود!',
+                cancelButtonText: 'انصراف'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/Admin/DailyFood/Remove', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.isSuccess) {
+                            Swal.fire({
+                                title: 'حذف شد!',
+                                text: data.message || 'برنامه غذایی با موفقیت حذف شد.',
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('خطا!', data.message || 'مشکلی در حذف اطلاعات رخ داد.', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire('خطا!', 'ارتباط با سرور برقرار نشد.', 'error');
+                    });
+                }
+            });
+        }
+    </script>
+
+}
+
