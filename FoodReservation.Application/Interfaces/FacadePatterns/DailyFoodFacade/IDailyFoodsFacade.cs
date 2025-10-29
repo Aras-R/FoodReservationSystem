@@ -13,5 +13,6 @@ namespace FoodReservation.Application.Interfaces.FacadePatterns.DailyFoodFacade
         IRegisterDailyFoodService RegisterDailyFoodService { get; }
         IGetDailyFoodService GetDailyFoodService { get; }
         IRemoveDailyFoodService RemoveDailyFoodService { get; }
+        IEditDailyFoodService EditDailyFoodService { get; }
     }
 }

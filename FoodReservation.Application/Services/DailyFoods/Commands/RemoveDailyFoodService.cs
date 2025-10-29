@@ -39,7 +39,7 @@ namespace FoodReservation.Application.Services.DailyFoods.Commands
         }
     }
 
-    public class RemoveDailyFoodDto()
+    public class RemoveDailyFoodDto
     {
         public int Id { get; set; }
     }

@@ -49,5 +49,14 @@ namespace FoodReservation.Application.Services.DailyFoods.Facade
                 return _removeDailyFoodService = _removeDailyFoodService ?? new RemoveDailyFoodService(_databaseContext);
             }
         }
+
+        private IEditDailyFoodService _editDailyFoodService;
+        public IEditDailyFoodService EditDailyFoodService
+        {
+            get
+            {
+                return _editDailyFoodService = _editDailyFoodService ?? new EditDailyFoodService(_databaseContext);
+            }
+        }
     }
 }
