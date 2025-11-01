@@ -31,6 +31,8 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
                 return View(new List<FoodReservation.Application.Services.DailyFoods.Queries.DailyFoodListDto>());
             }
 
+            ViewBag.Foods = _foodFacade.GetFoodService.Execute().Data;
+
             foreach (var item in result.Data)
             {
                 item.DayOfWeek = item.DayOfWeek switch
@@ -117,7 +119,6 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             return Json(new { isSuccess = false, message = result.Message });
         }
 
-
         //Remove DailyFoods
         [HttpPost]
         public IActionResult Remove([FromBody] RemoveDailyFoodDto request)
@@ -125,5 +126,30 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             var result = _dailyFoodFacade.RemoveDailyFoodService.Execute(request.Id);
             return Json(result);
         }
+
+        // Edit DailyFoods
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var data = _dailyFoodFacade.EditDailyFoodService.GetById(id);
+            if (data == null)
+            {
+                return Json(new { isSuccess = false, message = "برنامه‌ی غذایی یافت نشد ❌" });
+            }
+
+            return Json(new { isSuccess = true, data });
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit([FromBody] EditDailyFoodDto request)
+        {
+            if (request == null || request.Id <= 0)
+                return Json(new { isSuccess = false, message = "درخواست نامعتبر است." });
+
+            var result = _dailyFoodFacade.EditDailyFoodService.Execute(request);
+            return Json(result);
+        }
+
     }
 }

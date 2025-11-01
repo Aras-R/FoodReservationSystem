@@ -5,108 +5,223 @@
     ViewData["Title"] = "لیست برنامه‌های غذایی روزانه";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     var persian = new CultureInfo("fa-IR");
+    var foodsJson = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Foods);
 }
 
 <link rel="stylesheet" href="~/css/admin-dailyfood-list.css?v=@DateTime.Now.Ticks" />
 <link rel="stylesheet" href="~/Sweetalert2/Sweetalert2.min.css?v=@DateTime.Now.Ticks" />
 
-
 <h3 class="page-title">📋 لیست برنامه‌های غذایی روزانه</h3>
+
+<div class="header-section mb-3">
+    <a href="/Admin/DailyFood/Register" class="btn btn-primary">➕ ثبت وعده جدید</a>
+</div>
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert">@TempData["Error"]</div>
+    <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
-
-<table class="dailyfood-table">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>روز هفته</th>
-            <th>تاریخ</th>
-            <th>وعده غذایی</th>
-            <th>نام غذا</th>
-            <th>عملیات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            int i = 1;
-            foreach (var item in Model)
-            {
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning text-center">هیچ برنامه‌ای ثبت نشده است ❗</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle text-center">
+            <thead class="table-primary">
                 <tr>
-                    <td>@i</td>
-                    <td>@item.DayOfWeek</td>
-                    <td>
-                        @(item.Date > DateTime.MinValue
-                                        ? item.Date.ToString("yyyy/MM/dd", persian)
-                                        : "-")
-                    </td>
-                    <td>@item.MealType</td>
-                    <td>@item.FoodName</td>
-                    <td>
-                        <a href="@Url.Action("Edit", "DailyFood", new { area = "Admin", id = item.Id })" class="btn-edit">ویرایش</a>
-                    <button type="button" class="btn-delete" onclick="confirmDelete(@item.Id)">حذف</button>
-            </td>
+                    <th>#</th>
+                    <th>روز هفته</th>
+                    <th>تاریخ</th>
+                    <th>وعده غذایی</th>
+                    <th>نام غذا</th>
+                    <th>عملیات</th>
                 </tr>
-                i++;
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="6" class="no-data">هیچ برنامه‌ای ثبت نشده است</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Select((x, i) => new { x, i }))
+                {
+                    <tr id="row-@item.x.Id">
+                        <td>@(item.i + 1)</td>
+                        <td>@item.x.DayOfWeek</td>
+                        <td>@(item.x.Date > DateTime.MinValue ? item.x.Date.ToString("yyyy/MM/dd", persian) : "-")</td>
+                        <td>@item.x.MealType</td>
+                        <td>@item.x.FoodName</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm edit-btn" data-id="@item.x.Id">✏️ ویرایش</button>
+                            <button class="btn btn-danger btn-sm remove-btn" data-id="@item.x.Id">🗑️ حذف</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
 
 @section Scripts {
     <script src="~/Sweetalert2/Sweetalert2.min.js"></script>
     <script>
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'آیا مطمئن هستید؟',
-                text: "این عملیات قابل بازگشت نیست!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'بله، حذف شود!',
-                cancelButtonText: 'انصراف'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/Admin/DailyFood/Remove', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ id: id })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.isSuccess) {
-                            Swal.fire({
-                                title: 'حذف شد!',
-                                text: data.message || 'برنامه غذایی با موفقیت حذف شد.',
-                                icon: 'success'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('خطا!', data.message || 'مشکلی در حذف اطلاعات رخ داد.', 'error');
+        const foods = @Html.Raw(foodsJson);
+
+        // ✏️ ویرایش
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.dataset.id;
+                fetch(`/Admin/DailyFood/Edit?id=${id}`)
+                    .then(res => res.json())
+                    .then(result => {
+                        if (!result.isSuccess) {
+                            Swal.fire('خطا', result.message, 'error');
+                            return;
                         }
+
+                        const d = result.data;
+
+                        Swal.fire({
+                            title: 'ویرایش برنامه غذایی 🍽️',
+                            html: `
+                                <div class="edit-form">
+                                    <label>روز هفته:</label>
+                                    <select id="editDayOfWeek" class="swal2-select"></select>
+
+                                    <label>تاریخ:</label>
+                                    <select id="editDate" class="swal2-select"></select>
+
+                                    <label>وعده غذایی:</label>
+                                    <select id="editMealType" class="swal2-select">
+                                        <option value="0">صبحانه</option>
+                                        <option value="1">ناهار</option>
+                                        <option value="2">شام</option>
+                                    </select>
+
+                                    <label>غذا:</label>
+                                    <select id="editFoodId" class="swal2-select">
+                                        ${foods.map(f => `<option value="${f.Id}">${f.Name}</option>`).join('')}
+                                    </select>
+                                </div>
+                            `,
+                            focusConfirm: false,
+                            showCancelButton: true,
+                            confirmButtonText: '💾 ذخیره تغییرات',
+                            cancelButtonText: '❌ انصراف',
+                            didOpen: () => {
+                                const dayNames = ["شنبه","یک‌شنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه"];
+                                const daySelect = document.getElementById('editDayOfWeek');
+                                const dateSelect = document.getElementById('editDate');
+
+                                // ساخت گزینه‌های روز هفته
+                                dayNames.forEach((name,i) => {
+                                    const opt = document.createElement('option');
+                                    opt.value = i;
+                                    opt.textContent = name;
+                                    daySelect.appendChild(opt);
+                                });
+                                daySelect.value = d.dayOfWeek;
+
+                                // تابع محاسبه ۳ تاریخ آینده برای روز انتخابی
+                                const getNextThreeDates = (targetDay) => {
+                                    const today = new Date();
+                                    const result = [];
+                                    const persian = new Intl.DateTimeFormat('fa-IR', { dateStyle: 'short' });
+                                    for (let i = 0; i < 21; i++) {
+                                        const next = new Date();
+                                        next.setDate(today.getDate() + i);
+                                        if (next.getDay() === ((targetDay + 6) % 7)) { // چون شنبه=6 در JS
+                                            result.push({
+                                                value: next.toISOString().split('T')[0],
+                                                text: persian.format(next)
+                                            });
+                                            if (result.length === 3) break;
+                                        }
+                                    }
+                                    return result;
+                                };
+
+                                // پر کردن select تاریخ
+                                const fillDates = (dayIndex) => {
+                                    dateSelect.innerHTML = "";
+                                    const dates = getNextThreeDates(dayIndex);
+                                    dates.forEach(dItem => {
+                                        const opt = document.createElement('option');
+                                        opt.value = dItem.value;
+                                        opt.textContent = dItem.text;
+                                        dateSelect.appendChild(opt);
+                                    });
+                                };
+
+                                // مقدار اولیه تاریخ‌ها
+                                fillDates(parseInt(daySelect.value));
+
+                                // تغییر روز هفته → بروزرسانی تاریخ‌ها
+                                daySelect.addEventListener('change', e => {
+                                    fillDates(parseInt(e.target.value));
+                                });
+
+                                // وعده و غذا مقداردهی
+                                document.getElementById('editMealType').value = d.mealType;
+                                document.getElementById('editFoodId').value = d.foodId;
+                            },
+                            preConfirm: () => {
+                                return {
+                                    id: id,
+                                    dayOfWeek: parseInt(document.getElementById('editDayOfWeek').value),
+                                    date: document.getElementById('editDate').value,
+                                    mealType: parseInt(document.getElementById('editMealType').value),
+                                    foodId: parseInt(document.getElementById('editFoodId').value)
+                                };
+                            }
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                fetch('/Admin/DailyFood/Edit', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(result.value)
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    Swal.fire(data.isSuccess ? '✅ موفق' : '❌ خطا', data.message, data.isSuccess ? 'success' : 'error')
+                                        .then(() => { if(data.isSuccess) location.reload(); });
+                                })
+                                .catch(() => Swal.fire('خطا', 'ارتباط با سرور برقرار نشد', 'error'));
+                            }
+                        });
                     })
-                    .catch(() => {
-                        Swal.fire('خطا!', 'ارتباط با سرور برقرار نشد.', 'error');
-                    });
-                }
+                    .catch(() => Swal.fire('خطا', '❌ خطا در دریافت اطلاعات', 'error'));
             });
-        }
+        });
+
+        // 🗑️ حذف
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.dataset.id;
+                Swal.fire({
+                    title: 'آیا مطمئن هستید؟',
+                    text: "این عملیات غیرقابل بازگشت است!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'بله، حذف شود',
+                    cancelButtonText: 'انصراف'
+                }).then(result => {
+                    if(result.isConfirmed){
+                        fetch('/Admin/DailyFood/Remove', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ id: parseInt(id) })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            Swal.fire(data.isSuccess ? '✅ موفق' : '❌ خطا', data.message, data.isSuccess ? 'success' : 'error');
+                            if(data.isSuccess){
+                                const row = document.querySelector(`#row-${id}`);
+                                if(row) row.remove();
+                            }
+                        })
+                        .catch(()=> Swal.fire('خطا', 'ارتباط با سرور برقرار نشد', 'error'));
+                    }
+                });
+            });
+        });
     </script>
-
 }
-

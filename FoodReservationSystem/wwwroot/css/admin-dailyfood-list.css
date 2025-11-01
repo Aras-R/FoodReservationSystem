@@ -1,68 +1,243 @@
-﻿.page-title {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
+﻿/* 🌿 تنظیمات کلی */
+body {
+    font-family: "Vazirmatn", sans-serif;
+    background-color: #f5f7fb;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
 }
 
-.alert {
-    color: #721c24;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
+/* 📦 کانتینر اصلی */
+.dailyfood-list-container {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    max-width: 1100px;
+    margin: 30px auto;
+    transition: 0.3s;
 }
 
-.dailyfood-table {
+/* 🔹 هدر لیست */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+    .header-section h3 {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: #0d6efd;
+        border-right: 5px solid #0d6efd;
+        padding-right: 10px;
+    }
+
+    .header-section .btn-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+        .header-section .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+
+/* 🔹 جدول وعده‌ها */
+.table {
     width: 100%;
     border-collapse: collapse;
-    font-family: IRANSans, sans-serif;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
 }
 
-    .dailyfood-table th,
-    .dailyfood-table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
+    .table th {
+        background-color: #0d6efd;
+        color: #fff;
+        font-weight: 600;
+        padding: 12px 10px;
     }
 
-    .dailyfood-table th {
-        background-color: #f2f2f2;
-        font-weight: bold;
+    .table td {
+        padding: 12px 10px;
+        vertical-align: middle;
+        color: #333;
+        font-size: 0.93rem;
     }
 
-    .dailyfood-table tr:nth-child(even) {
-        background-color: #f9f9f9;
+    .table tbody tr:nth-child(even) {
+        background-color: #f9fbff;
     }
 
-.btn-edit,
-.btn-delete {
-    padding: 5px 10px;
-    margin: 2px;
-    border-radius: 4px;
-    text-decoration: none;
-    color: #fff;
+    .table tbody tr:hover {
+        background-color: #eef5ff;
+        transition: background-color 0.3s ease;
+    }
+
+/* 🔘 دکمه‌ها */
+.btn {
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-weight: 600;
     font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+    color: #fff;
 }
 
-.btn-edit {
-    background-color: #007bff;
+.btn-sm {
+    font-size: 0.85rem;
+    padding: 5px 10px;
 }
 
-.btn-delete {
+/* ✏️ ویرایش */
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
+/* 🗑️ حذف */
+.btn-danger {
     background-color: #dc3545;
 }
 
-.btn-edit:hover {
-    background-color: #0056b3;
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+    }
+
+/* ⚡ پنل ویرایش وعده */
+.edit-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 1000;
 }
 
-.btn-delete:hover {
-    background-color: #a71d2a;
+    .edit-panel h5 {
+        margin-bottom: 20px;
+        color: #0d6efd;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    .edit-panel .mb-3 {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    .edit-panel label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .edit-panel select,
+    .edit-panel input,
+    .edit-panel textarea {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+        .edit-panel select:focus,
+        .edit-panel input:focus,
+        .edit-panel textarea:focus {
+            border-color: #0d6efd;
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 6px rgba(13,110,253,0.2);
+        }
+
+    /* دکمه‌های داخل پنل */
+    .edit-panel .btn {
+        width: auto;
+    }
+
+    .edit-panel .btn-secondary {
+        background-color: #6c757d;
+    }
+
+        .edit-panel .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .edit-panel .btn-success {
+        background-color: #198754;
+    }
+
+        .edit-panel .btn-success:hover {
+            background-color: #157347;
+        }
+
+/* 🌙 Overlay تیره هنگام باز شدن فرم ویرایش */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    z-index: 999;
 }
 
-.no-data {
-    text-align: center;
-    color: #888;
-    font-style: italic;
+/* ⚠️ هشدارها */
+.alert {
+    padding: 15px 18px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* 📱 واکنش‌گرا */
+@media (max-width: 768px) {
+    .dailyfood-list-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .table th, .table td {
+        font-size: 0.85rem;
+        padding: 8px 6px;
+    }
+
+    .header-section {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .edit-panel {
+        width: 90%;
+    }
 }
