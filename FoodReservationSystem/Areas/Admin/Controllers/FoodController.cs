@@ -59,7 +59,7 @@ namespace FoodReservationSystem.Areas.Admin.Controllers
             return Json(result);
         }
         [HttpPost]
-        public IActionResult Edit([FromBody] EditFoodDto request)
+        public IActionResult Edit([FromForm] EditFoodDto request)
         {
             var result = _foodsFacade.EditFoodService.Execute(request);
             return Json(result);

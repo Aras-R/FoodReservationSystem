@@ -1,6 +1,7 @@
 ﻿using FoodReservation.Application.Interfaces.Contexts;
 using FoodReservation.Application.Interfaces.Foods.Commands;
 using FoodReservation.Common.Dto;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,27 +37,33 @@ namespace FoodReservation.Application.Services.Foods.Commands
         public ResultDto Execute(EditFoodDto request)
         {
             var food = _databaseContext.Foods.FirstOrDefault(x => x.Id == request.Id);
-            if(food == null)
-            {
-                return new ResultDto
-                {
-                    IsSuccess = false,
-                    Message = "غذا یافت نشد ❌"
-                };
-            }
+            if (food == null)
+                return new ResultDto { IsSuccess = false, Message = "غذا یافت نشد ❌" };
 
             food.Name = request.Name;
             food.Price = request.Price;
             food.Description = request.Description;
 
+            if (request.ImageFile != null && request.ImageFile.Length > 0)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(request.ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/foods", fileName);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    request.ImageFile.CopyTo(stream);
+                }
+
+                food.Image = "/uploads/foods/" + fileName;
+            }
+
             _databaseContext.SaveChanges();
 
-            return new ResultDto
-            {
-                IsSuccess = true,
-                Message = "ویرایش غذا با موفقیت انجام شد ✅"
-            };
+            return new ResultDto { IsSuccess = true, Message = "ویرایش غذا با موفقیت انجام شد ✅" };
         }
+
     }
 
     public class EditFoodDto
@@ -65,5 +72,7 @@ namespace FoodReservation.Application.Services.Foods.Commands
         public string Name { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public string? CurrentImageUrl { get; set; }
     }
 }
