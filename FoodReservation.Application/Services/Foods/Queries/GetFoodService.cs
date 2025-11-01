@@ -27,6 +27,7 @@ namespace FoodReservation.Application.Services.Foods.Queries
                     Name = x.Name,
                     Price = x.Price,
                     Description = x.Description,
+                    Image = x.Image,
                 })
                 .OrderBy(u =>u.Id)
                 .ToList();
@@ -42,5 +43,6 @@ namespace FoodReservation.Application.Services.Foods.Queries
         public string Name { get; set; }
         public int Price { get; set; }
         public string? Description { get; set; }
+        public string? Image {  get; set; }
     }
 }

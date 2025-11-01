@@ -29,6 +29,7 @@
                 <thead class="table-primary">
                     <tr>
                         <th>ردیف</th>
+                        <th>عکس</th>
                         <th>نام غذا</th>
                         <th>قیمت (تومان)</th>
                         <th>توضیحات</th>
@@ -40,6 +41,16 @@
                     {
                         <tr id="row-@food.x.Id">
                             <td>@(food.i + 1)</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(food.x.Image))
+                                {
+                                    <img src="@food.x.Image" alt="@food.x.Name" style="width:60px; height:60px; object-fit:cover; border-radius:8px;" />
+                                }
+                                else
+                                {
+                                    <span>—</span>
+                                }
+                            </td>
                             <td>@food.x.Name</td>
                             <td>@string.Format("{0:N0}", food.x.Price)</td>
                             <td>@(string.IsNullOrWhiteSpace(food.x.Description) ? "—" : food.x.Description)</td>
@@ -76,6 +87,14 @@
             <textarea id="editFoodDescription" class="form-control" rows="3"></textarea>
         </div>
 
+        <div class="mb-3">
+            <label>عکس غذا:</label>
+            <div>
+                <img id="editFoodImagePreview" src="" alt="عکس غذا" style="width:100px; height:100px; object-fit:cover; border-radius:8px; margin-bottom:8px;" />
+            </div>
+            <input type="text" id="editFoodImageUrl" class="form-control" placeholder="آدرس تصویر یا URL" />
+        </div>
+
         <div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-secondary" id="cancelEdit">❌ انصراف</button>
             <button type="submit" class="btn btn-success">💾 ذخیره تغییرات</button>
@@ -103,6 +122,8 @@
                         document.getElementById('editFoodName').value = data.name;
                         document.getElementById('editFoodPrice').value = data.price;
                         document.getElementById('editFoodDescription').value = data.description || "";
+                        document.getElementById('editFoodImagePreview').src = data.imageUrl || '';
+                        document.getElementById('editFoodImageUrl').value = data.imageUrl || '';
                         document.getElementById('editPanel').style.display = 'block';
                     })
                     .catch(() => Swal.fire('خطا', '❌ خطا در دریافت اطلاعات غذا', 'error'));
@@ -120,7 +141,8 @@
                 id: document.getElementById('editFoodId').value,
                 name: document.getElementById('editFoodName').value,
                 price: parseInt(document.getElementById('editFoodPrice').value),
-                description: document.getElementById('editFoodDescription').value
+                description: document.getElementById('editFoodDescription').value,
+                imageUrl: document.getElementById('editFoodImageUrl').value
             };
 
             fetch('/Admin/Food/Edit', {
@@ -182,5 +204,9 @@
         z-index: 1000;
         border: 1px solid #ddd;
         display: none;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
     }
 </style>

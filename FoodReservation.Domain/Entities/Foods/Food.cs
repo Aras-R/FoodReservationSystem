@@ -13,6 +13,7 @@ namespace FoodReservation.Domain.Entities.Foods
         public string Name { get; set; }
         public int Price { get; set; }
         public string? Description { get; set; }
+        public String? Image {  get; set; }
 
         public ICollection<DailyFood> DailyFoods { get; set; }
     }
