@@ -1,0 +1,42 @@
+﻿@model List<FoodReservation.Application.Services.Foods.Queries.GetFoodDto>
+
+@{
+    ViewData["Title"] = "منوی غذاها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user-food-list.css?v=@DateTime.Now.Ticks" />
+
+<div class="food-list-container">
+    <div class="header-section">
+        <h3>🍽️ منوی غذاها</h3>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">هیچ غذایی ثبت نشده است ❗</div>
+    }
+    else
+    {
+        <div class="food-grid">
+            @foreach (var food in Model)
+            {
+                <div class="food-card">
+                    <div class="food-content">
+                        <h5 class="food-name">@food.Name</h5>
+                        <p class="food-desc">@(!string.IsNullOrWhiteSpace(food.Description) ? food.Description : "توضیحی ثبت نشده است")</p>
+                        <div class="food-footer">
+                            <span class="food-price">@food.Price.ToString("N0") تومان</span>
+                            <a href="/User/Reservation/Create?foodId=@food.Id" class="btn-reserve">رزرو</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
