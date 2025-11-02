@@ -27,9 +27,15 @@
             @foreach (var food in Model)
             {
                 <div class="food-card">
+                    <div class="food-image">
+                        <img src="@(string.IsNullOrEmpty(food.Image) ? "/images/no-image.png" : food.Image)" alt="@food.Name" />
+                    </div>
+
                     <div class="food-content">
                         <h5 class="food-name">@food.Name</h5>
-                        <p class="food-desc">@(!string.IsNullOrWhiteSpace(food.Description) ? food.Description : "توضیحی ثبت نشده است")</p>
+                        <p class="food-desc">
+                            @(!string.IsNullOrWhiteSpace(food.Description) ? food.Description : "توضیحی ثبت نشده است")
+                        </p>
                         <div class="food-footer">
                             <span class="food-price">@food.Price.ToString("N0") تومان</span>
                             <a href="/User/Reservation/Create?foodId=@food.Id" class="btn-reserve">رزرو</a>
