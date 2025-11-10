@@ -1,9 +1,11 @@
 ﻿using FoodReservation.Application.Interfaces.Contexts;
 using FoodReservation.Application.Interfaces.FacadePatterns.DailyFoodFacade;
 using FoodReservation.Application.Interfaces.FacadePatterns.FoodFacade;
+using FoodReservation.Application.Interfaces.FacadePatterns.Reservation;
 using FoodReservation.Application.Interfaces.FacadePatterns.UserFacade;
 using FoodReservation.Application.Services.DailyFoods.Facade;
 using FoodReservation.Application.Services.Foods.Facade;
+using FoodReservation.Application.Services.Reservations.Facade;
 using FoodReservation.Application.Services.Users.Facade;
 using FoodReservation.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +24,7 @@ builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<IUsersFacade, UsersFacade>();
 builder.Services.AddScoped<IFoodsFacade, FoodsFacade>();
 builder.Services.AddScoped<IDailyFoodsFacade, DailyFoodFacade>();
+builder.Services.AddScoped<IReservationsFacade, ReservationsFacade>();
 
 // فعال‌سازی MVC
 builder.Services.AddControllersWithViews();

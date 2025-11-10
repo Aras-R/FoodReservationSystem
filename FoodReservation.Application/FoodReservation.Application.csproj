@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\FacadePatterns\Reservation\" />
-    <Folder Include="Interfaces\Reservations\Commands\" />
     <Folder Include="Interfaces\Reservations\Queries\" />
-    <Folder Include="Services\Reservations\Commands\" />
-    <Folder Include="Services\Reservations\Facade\" />
     <Folder Include="Services\Reservations\Queries\" />
   </ItemGroup>
 
