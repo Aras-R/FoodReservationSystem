@@ -1,0 +1,59 @@
+﻿@model List<FoodReservation.Application.Services.DailyFoods.Queries.DailyFoodListDto>
+
+@{
+    ViewData["Title"] = "رزرو غذا";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user-reservation-food.css?v=@DateTime.Now.Ticks" />
+
+<div class="reservation-container">
+    <h2>🍽 رزرو غذا</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="reservation-table">
+            <thead>
+                <tr>
+                    <th>تاریخ</th>
+                    <th>روز</th>
+                    <th>وعده</th>
+                    <th>نام غذا</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Date.ToString("yyyy/MM/dd")</td>
+                        <td>@item.DayOfWeek</td>
+                        <td>@item.MealType</td>
+                        <td>@item.FoodName</td>
+                        <td>
+                            <form asp-action="Reserv" asp-controller="Reservation" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="dailyFoodId" value="@item.Id" />
+                                <button type="submit" class="btn-reserve">رزرو</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>غذایی برای نمایش وجود ندارد.</p>
+    }
+</div>
