@@ -8,17 +8,17 @@ using FoodReservation.Application.Services.Foods.Facade;
 using FoodReservation.Application.Services.Reservations.Facade;
 using FoodReservation.Application.Services.Users.Facade;
 using FoodReservation.Persistence.Context;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// ثبت Connection String به صورت مستقیم
+// 💾 تنظیم Connection String
 var connectionString = @"Data Source=DESKTOP-8ILS0U2; Initial Catalog=FoodReservationDB; Integrated Security=True; TrustServerCertificate=True";
 
-// ثبت DbContext و Interface
+// 📦 ثبت DbContext و سرویس‌ها
 builder.Services.AddDbContext<DatabaseContext>(options =>
-        options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<IUsersFacade, UsersFacade>();
@@ -26,12 +26,23 @@ builder.Services.AddScoped<IFoodsFacade, FoodsFacade>();
 builder.Services.AddScoped<IDailyFoodsFacade, DailyFoodFacade>();
 builder.Services.AddScoped<IReservationsFacade, ReservationsFacade>();
 
-// فعال‌سازی MVC
+// 🔐 فعال‌سازی احراز هویت با کوکی
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Authentication/SignIn"; // مسیر لاگین
+        options.LogoutPath = "/Authentication/SignUp"; // مسیر لاگ‌اوت
+        options.AccessDeniedPath = "/Authentication/AccessDenied"; // در صورت عدم دسترسی
+        options.ExpireTimeSpan = TimeSpan.FromHours(4); // مدت زمان ماندگاری کوکی
+        options.SlidingExpiration = true; // تمدید خودکار در هر درخواست
+    });
+
+// ⚙️ فعال‌سازی MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// تنظیمات Middleware و Routing
+// 🔧 Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -39,26 +50,25 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); 
-app.UseRouting();
-app.UseAuthorization();
+app.UseStaticFiles();
 
+app.UseRouting();
+
+// ⚠️ مهم: ترتیب Authentication قبل از Authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapStaticAssets();
 
-
-// Area routes (Admin)
+// 🔹 مسیرهای Area (مثل Admin)
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-
-// Default routes 
+// 🔹 مسیر پیش‌فرض
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
 ).WithStaticAssets();
-
-
 
 app.Run();

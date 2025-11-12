@@ -58,5 +58,21 @@ namespace FoodReservation.Application.Services.Users.Facade
                 return _removeUserService = _removeUserService ?? new RemoveUserService(_databaseContext);
             }
         }
+        private ISignupUserService _signupUserService;
+        public ISignupUserService SignupUserService
+        {
+            get
+            {
+                return _signupUserService = _signupUserService ?? new SignupUserService(_databaseContext);
+            }
+        }
+        private ILoginUserService _loginUserService;
+        public ILoginUserService LoginUserService
+        {
+            get
+            {
+                return _loginUserService = _loginUserService ?? new LoginUserService(_databaseContext);
+            }
+        }
     }
 }

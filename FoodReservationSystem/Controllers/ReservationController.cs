@@ -1,11 +1,13 @@
 ﻿using FoodReservation.Application.Interfaces.FacadePatterns.DailyFoodFacade;
 using FoodReservation.Application.Interfaces.FacadePatterns.Reservation;
 using FoodReservation.Application.Services.Reservations.Commands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FoodReservationSystem.Controllers
 {
+    [Authorize] // فقط کاربر لاگین‌کرده اجازه دسترسی دارد
     public class ReservationController : Controller
     {
         private readonly IReservationsFacade _reservationsFacade;
@@ -24,6 +26,7 @@ namespace FoodReservationSystem.Controllers
             return View();
         }
 
+        // نمایش لیست غذاهای روزانه برای رزرو
         [HttpGet]
         public IActionResult Reserv()
         {
@@ -38,22 +41,26 @@ namespace FoodReservationSystem.Controllers
             return View(dailyFoods.Data);
         }
 
+        // رزرو غذا برای کاربر لاگین کرده
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Reserv(int dailyFoodId)
         {
             try
             {
-                // گرفتن آیدی کاربر لاگین شده از سیستم احراز هویت
+                // خواندن آیدی کاربر از کوکی لاگین‌شده
                 var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 if (string.IsNullOrEmpty(userIdString))
                 {
-                    TempData["Error"] = "لطفاً ابتدا وارد حساب کاربری خود شوید.";
-                    return RedirectToAction("Login", "Account");
+                    // این حالت فقط زمانی رخ می‌دهد که کوکی خراب یا منقضی شده باشد
+                    TempData["Error"] = "خطا در شناسایی کاربر! لطفاً مجدداً وارد شوید.";
+                    return RedirectToAction("Index", "Home");
                 }
 
                 int userId = int.Parse(userIdString);
 
+                // ایجاد رزرو
                 var result = _reservationsFacade.RegisterReservationService.Execute(
                     new RequestRegisterReservationDto
                     {
