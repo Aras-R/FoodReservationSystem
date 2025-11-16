@@ -1,6 +1,7 @@
 ﻿using FoodReservation.Application.Interfaces.Contexts;
 using FoodReservation.Application.Interfaces.Users.Commands;
 using FoodReservation.Common.Dto;
+using Store.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,26 +22,27 @@ namespace FoodReservation.Application.Services.Users.Commands
         {
             var user = _databaseContext.Users.FirstOrDefault(u => u.StudentNumber == studentNumber);
 
-            if (user == null || user.PassWord != password)
+            if (user == null)
             {
-                return new ResultDto<UserLoginResultDto>
-                {
-                    IsSuccess = false,
-                    Message = "شماره دانشجویی یا رمز عبور اشتباه است."
-                };
+                return ResultDto<UserLoginResultDto>.Fail("شماره دانشجویی یا رمز عبور اشتباه است.");
             }
 
-            return new ResultDto<UserLoginResultDto>
+            var passwordHasher = new PasswordHasher();
+
+            // 🔐 بررسی درست بودن رمز
+            bool passwordIsValid = passwordHasher.VerifyPassword(user.PassWord, password);
+
+            if (!passwordIsValid)
             {
-                IsSuccess = true,
-                Message = "ورود موفقیت‌آمیز بود.",
-                Data = new UserLoginResultDto
-                {
-                    Id = user.Id,
-                    FullName = user.FullName,
-                    Role = user.Role.ToString()
-                }
-            };
+                return ResultDto<UserLoginResultDto>.Fail("شماره دانشجویی یا رمز عبور اشتباه است.");
+            }
+
+            return ResultDto<UserLoginResultDto>.Success(new UserLoginResultDto
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Role = user.Role.ToString()
+            }, "ورود موفقیت‌آمیز بود.");
         }
     }
 
